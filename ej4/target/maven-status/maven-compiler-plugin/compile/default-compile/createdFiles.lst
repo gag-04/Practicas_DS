@@ -1,0 +1,10 @@
+com\mycompany\ej4\Target.class
+com\mycompany\ej4\FilterChain.class
+com\mycompany\ej4\EmailFilter.class
+com\mycompany\ej4\LengthFilter.class
+com\mycompany\ej4\Filter.class
+com\mycompany\ej4\Main.class
+com\mycompany\ej4\SpecialCharacterFilter.class
+com\mycompany\ej4\NumbersFilter.class
+com\mycompany\ej4\Client.class
+com\mycompany\ej4\FilterManager.class
