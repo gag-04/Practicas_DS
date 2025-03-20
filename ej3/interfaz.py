@@ -14,7 +14,7 @@ def mostrarPantalla(frame):
 
 def cargarPantallaInicio(app):
     app.geometry("800x600")  # geometry() -> establecer tamaño de la ventana
-    app.title("Ejercicio 2 - Práctica 1 - DS")
+    app.title("Ejercicio 3 - Práctica 1 - DS")
 
     mostrarPantalla(pantallaInicial)
 
