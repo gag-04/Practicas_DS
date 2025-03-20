@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+#from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from bs4 import BeautifulSoup
 import requests
 import yaml
 
-
+paginasAScrapear = 5
 
 
 class Scraper(ABC):
@@ -19,16 +18,16 @@ class Scraper(ABC):
 class SeleniumScraper(Scraper):
 
     def scrapear(self,web):
-        pausa = 5
-        options = Options()
-        options.headless= True
-        browser = webdriver.Firefox(options=options)
+        pausa = 2
+        #options = Options()
+        #options.headless= True
+        browser = webdriver.Firefox()#options=options)
         browser.get(web)
         numCita = 1
         datos = []
 
 
-        for num in range(0,5):
+        for num in range(0,paginasAScrapear):
 
             browser.implicitly_wait(pausa)
 
@@ -51,11 +50,12 @@ class SeleniumScraper(Scraper):
 
                 numCita += 1
 
-            try:
-                boton = browser.find_element(By.XPATH, "/html/body/div/div[2]/div[1]/nav/ul/li/a") 
-                boton.click()  # Hace clic en el botón
-            except Exception as e:
-                print("No se encontró el botón o hubo un error:", e)
+            if num < paginasAScrapear-1:
+                try:
+                    boton = browser.find_element(By.XPATH, "/html/body/div/div[2]/div[1]/nav/ul/li[@class='next']/a")
+                    boton.click() 
+                except Exception as e:
+                    print("No se encontró el botón o hubo un error:", e)
 
             num += 1
         
