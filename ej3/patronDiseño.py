@@ -7,6 +7,11 @@ import requests
 import yaml
 
 paginasAScrapear = 5
+filtroCita = "quote"
+filtroTextoCita = "text"
+filtroAutor = "author"
+filtroEtiqueta = "tag"
+
 
 
 class Scraper(ABC):
@@ -31,12 +36,12 @@ class SeleniumScraper(Scraper):
 
             browser.implicitly_wait(pausa)
 
-            contenedores = browser.find_elements(By.CLASS_NAME, "quote")
+            contenedores = browser.find_elements(By.CLASS_NAME, filtroCita)
             
             for contenedor in contenedores:
-                cita = contenedor.find_element(By.CLASS_NAME, "text")
-                autor = contenedor.find_element(By.CLASS_NAME, "author")
-                etiquetas = contenedor.find_elements(By.CLASS_NAME, "tag")
+                cita = contenedor.find_element(By.CLASS_NAME, filtroTextoCita)
+                autor = contenedor.find_element(By.CLASS_NAME, filtroAutor)
+                etiquetas = contenedor.find_elements(By.CLASS_NAME, filtroEtiqueta)
 
                 tags = [etiqueta.text.strip() for etiqueta in etiquetas]  
 
@@ -77,14 +82,14 @@ class BeautifulSoupScraper(Scraper):
             if respuesta.status_code == 200:
                 sopa = BeautifulSoup(respuesta.text, "html.parser")
 
-                contenedores = sopa.find_all(class_="quote")
+                contenedores = sopa.find_all(class_= filtroCita)
 
                 for contenedor in contenedores:
-                    cita = contenedor.find(class_="text")
-                    autor = contenedor.find(class_="author")
-                    etiquetas = contenedor.find_all(class_ ="tag")
+                    cita = contenedor.find(class_= filtroTextoCita)
+                    autor = contenedor.find(class_= filtroAutor)
+                    etiquetas = contenedor.find_all(class_ =filtroEtiqueta)
 
-                    tags = [etiqueta.text.strip() for etiqueta in etiquetas]
+                    tags = [etiqueta.text for etiqueta in etiquetas]
 
                     datos.append({
                         "ID": numCita,
