@@ -35,9 +35,12 @@ while opcion != 3:
                 os.makedirs(carpeta)
 
             nombreArchivo = "citas_" + str(usos) + ".yaml"
-            with open(os.path.join(carpeta, nombreArchivo), "w", encoding="utf-8") as archivo:
+            ruta = os.path.join(carpeta, nombreArchivo)
+
+            with open(ruta , "w", encoding="utf-8") as archivo:
                 yaml.dump(datos, archivo, allow_unicode=True, default_flow_style=False, sort_keys=False)
+            print("Datos guardados en " + os.path.realpath(ruta) + ".")
         else:
-            print("Datos guardados en 'citas.yaml'.")
+            print("No hay datos o ha habido un error.")
 
     usos += 1

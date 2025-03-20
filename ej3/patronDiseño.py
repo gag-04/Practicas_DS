@@ -27,7 +27,7 @@ class SeleniumScraper(Scraper):
         datos = []
 
 
-        for num in range(0,paginasAScrapear):
+        for paginasScrapeadas in range(0,paginasAScrapear):
 
             browser.implicitly_wait(pausa)
 
@@ -50,14 +50,13 @@ class SeleniumScraper(Scraper):
 
                 numCita += 1
 
-            if num < paginasAScrapear-1:
+            if paginasScrapeadas < paginasAScrapear-1:
                 try:
                     boton = browser.find_element(By.XPATH, "/html/body/div/div[2]/div[1]/nav/ul/li[@class='next']/a")
                     boton.click() 
                 except Exception as e:
                     print("No se encontró el botón o hubo un error:", e)
 
-            num += 1
         
         browser.quit()
 
@@ -71,8 +70,8 @@ class BeautifulSoupScraper(Scraper):
         datos = []
         
 
-        for num in range(1,6):
-            url = web + "/page/" + str(num)
+        for paginasAScrapear in range(1,6):
+            url = web + "/page/" + str(paginasAScrapear)
             respuesta = requests.get(url)
                 
             if respuesta.status_code == 200:
@@ -94,8 +93,6 @@ class BeautifulSoupScraper(Scraper):
                         "Etiquetas": tags
                     })
                     numCita+=1
-
-            num+=1
 
 
         return datos
