@@ -1,6 +1,6 @@
 import _tkinter as tk
 from tkinter import ttk
-from patronDiseño import *
+from Scraper import *
 
 
 def mostrarPantalla(frame):

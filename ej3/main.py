@@ -1,4 +1,7 @@
-from patronDiseño import *
+from Contexto import *
+from Scraper import *
+from SeleniumScraper import *
+from BeautifulSoupScraper import *
 import os
 
 WEB = "https://quotes.toscrape.com"
