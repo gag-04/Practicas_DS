@@ -1,0 +1,8 @@
+{
+  "texto": "Artificial intelligence (AI) is transforming industries worldwide. Businesses use AI for automation, data analysis, and customer service. Machine learning models, such as neural networks, enable computers to recognize patterns and make predictions. However, ethical concerns arise regarding data privacy and job displacement. As AI technology advances, it is crucial to develop policies that ensure its responsible use while maximizing its benefits for society.",
+  "input_lang": "en",
+  "output_lang": "es",
+  "model_llm": "facebook/bart-large-cnn",
+  "model_translation": "Helsinki-NLP/opus-mt-en-es",
+  "model_expansion": "facebook/blenderbot-400M-distill"
+} 
