@@ -1,10 +1,12 @@
-#from interfaz import *
 from patronDiseño import *
+import os
 
 WEB = "https://quotes.toscrape.com"
 
 opcion=0
 usos =  1
+carpetaSelenium = "Resultados/Selenium"
+carpetaBeautifulSoup = "Resultados/BeautifulSoup"
 
 while opcion != 3:
     opcion = int(input("\n\n Introduce 1 para usar Selenium, 2 para usar BeautifulSoup y 3 para salir del programa: "))
@@ -13,13 +15,11 @@ while opcion != 3:
 
     if opcion == 1: 
         scraper = Estrategia(SeleniumScraper())
-        metodo = "Selenium"
-
-        
+        carpeta = carpetaSelenium
 
     elif opcion == 2:
         scraper = Estrategia(BeautifulSoupScraper())
-        metodo = "BeautifulSoup"
+        carpeta = carpetaBeautifulSoup
 
     elif opcion == 3:
         print ("El programa ha sido finalizado correctamente.")
@@ -27,24 +27,17 @@ while opcion != 3:
     else: 
         print("El valor que has introducido no es válido, vuelve a intentarlo.")
 
-
     if scraper != 0:
         datos = scraper.scrapear(WEB)
         
         if datos:
-            nombreArchivo = "citas_"+ str(usos)+ "_" + metodo + ".yaml"
-            with open(nombreArchivo, "w", encoding="utf-8") as archivo:
+            if not os.path.exists(carpeta):
+                os.makedirs(carpeta)
+
+            nombreArchivo = "citas_" + str(usos) + ".yaml"
+            with open(os.path.join(carpeta, nombreArchivo), "w", encoding="utf-8") as archivo:
                 yaml.dump(datos, archivo, allow_unicode=True, default_flow_style=False, sort_keys=False)
         else:
             print("Datos guardados en 'citas.yaml'.")
 
     usos += 1
-  
-
-
-
-
-
-
-
-
