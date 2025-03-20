@@ -6,12 +6,16 @@ from bs4 import BeautifulSoup
 import requests
 import yaml
 
+<<<<<<< HEAD
 
 filtroCita = "quote"
 filtroTextoCita = "text"
 filtroAutor = "author"
 filtroEtiqueta = "tag"
 
+=======
+paginasAScrapear = 5
+>>>>>>> parent of f0289f6 (Creadas variables para los filtros)
 
 
 class Scraper(ABC):
@@ -37,12 +41,12 @@ class SeleniumScraper(Scraper):
 
             browser.implicitly_wait(pausa)
 
-            contenedores = browser.find_elements(By.CLASS_NAME, filtroCita)
+            contenedores = browser.find_elements(By.CLASS_NAME, "quote")
             
             for contenedor in contenedores:
-                cita = contenedor.find_element(By.CLASS_NAME, filtroTextoCita)
-                autor = contenedor.find_element(By.CLASS_NAME, filtroAutor)
-                etiquetas = contenedor.find_elements(By.CLASS_NAME, filtroEtiqueta)
+                cita = contenedor.find_element(By.CLASS_NAME, "text")
+                autor = contenedor.find_element(By.CLASS_NAME, "author")
+                etiquetas = contenedor.find_elements(By.CLASS_NAME, "tag")
 
                 tags = [etiqueta.text.strip() for etiqueta in etiquetas]  
 
@@ -83,14 +87,14 @@ class BeautifulSoupScraper(Scraper):
             if respuesta.status_code == 200:
                 sopa = BeautifulSoup(respuesta.text, "html.parser")
 
-                contenedores = sopa.find_all(class_= filtroCita)
+                contenedores = sopa.find_all(class_="quote")
 
                 for contenedor in contenedores:
-                    cita = contenedor.find(class_= filtroTextoCita)
-                    autor = contenedor.find(class_= filtroAutor)
-                    etiquetas = contenedor.find_all(class_ =filtroEtiqueta)
+                    cita = contenedor.find(class_="text")
+                    autor = contenedor.find(class_="author")
+                    etiquetas = contenedor.find_all(class_ ="tag")
 
-                    tags = [etiqueta.text for etiqueta in etiquetas]
+                    tags = [etiqueta.text.strip() for etiqueta in etiquetas]
 
                     datos.append({
                         "ID": numCita,
