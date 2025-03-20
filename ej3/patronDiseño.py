@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 import yaml
 
-paginasAScrapear = 5
+
 filtroCita = "quote"
 filtroTextoCita = "text"
 filtroAutor = "author"
@@ -15,6 +15,7 @@ filtroEtiqueta = "tag"
 
 
 class Scraper(ABC):
+    paginasAScrapear = 5
     @abstractmethod
     def scrapear(self,web):
         raise NotImplementedError("Es interfaz abstracta")
