@@ -1,6 +1,8 @@
-import _tkinter as tk
+import tkinter as tk
 from tkinter import ttk
 from Scraper import *
+
+
 
 
 def mostrarPantalla(frame):
