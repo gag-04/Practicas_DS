@@ -1,10 +1,19 @@
 import 'account.dart';
 
 abstract class Transaction {
-   final String id;
+   final String _id ;
    final double amount;
+   static int siguienteID = 0;
 
-   Transaction(this.id, this.amount);
+   Transaction(this.amount) : _id = "Transaction_${siguienteID++}"
+   {
+      Transaction.siguienteID++;
+   }
+
+   String getID(){
+      return _id;
+   }
+
 
    void apply( Account account);
 }

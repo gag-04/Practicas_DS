@@ -2,17 +2,15 @@ import 'account.dart';
 import 'transaction.dart';
 
 class TransferTransaction extends Transaction {
-    final Account to_account;
+    final Account toAccount;
 
-    TransferTransaction(String id, double amount, this.to_account){
-    }
-        : super(id, amount);
+    TransferTransaction(super.amount, this.toAccount);
 
 
     @override
     void apply(Account origin) {
         origin.withdraw(amount); // Retira de la cuenta origen
-        to_account.deposit(amount); // Deposita en la cuenta destino
+        toAccount.deposit(amount); // Deposita en la cuenta destino
     }
 
 }

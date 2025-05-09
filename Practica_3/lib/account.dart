@@ -2,16 +2,14 @@ class Account {
   final String accountNumber;
   double _amount;
 
-  Account(this.accountNumber, double initialAmount)
-      : assert(initialAmount == 0, 'El saldo inicial debe ser 0'),
-        _amount = initialAmount;
+  Account(this.accountNumber) : _amount = 0;
 
   double get balance => _amount;
 
   /// Deposita un importe positivo en la cuenta.
   void deposit(double amount) {
     if (amount <= 0) {
-      throw ArgumentError('El importe del depósito debe ser positivo');
+      throw StateError('El importe del depósito debe ser positivo');
     }
     _amount += amount;
   }
@@ -19,7 +17,7 @@ class Account {
   /// Retira un importe positivo si hay suficiente saldo.
   void withdraw(double amount) {
     if (amount <= 0) {
-      throw ArgumentError('El importe de la retirada debe ser positivo');
+      throw StateError('El importe de la retirada debe ser positivo');
     }
     if (amount > _amount) {
       throw StateError('Saldo insuficiente');

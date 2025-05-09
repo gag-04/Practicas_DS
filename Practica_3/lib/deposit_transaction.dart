@@ -3,16 +3,16 @@ import 'account.dart';
 
 class DepositTransaction extends Transaction{
 
-  DepositTransaction(String id, double amount): super(id,amount);
+  DepositTransaction(super.amount);
 
   @override
   apply(Account account){
-    if (this.amount > 0){
-      account.deposit(this.amount);
+    if (amount > 0){
+      account.deposit(amount);
     }
 
     else{
-      throw ArgumentError("La cantidad no puede ser negativa");
+      throw StateError("La cantidad no puede ser negativa");
     }
   }
 }
