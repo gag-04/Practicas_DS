@@ -46,9 +46,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _depositarDinero(){
+  void _depositarDinero(String numCuenta, double cantidad){
     setState(() {
+      banco.deposit(numCuenta, cantidad);
+    });
+  }
 
+  void _transferirDinero(String numCuenta, double cantidad, String destino){
+    setState(() {
+      banco.transfer(numCuenta, cantidad, destino);
+    });
+  }
+
+  void _sacarDinero(String numCuenta, double cantidad){
+    setState(() {
+      banco.withdraw(numCuenta, cantidad);
     });
   }
 
@@ -64,6 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               ListaCuentas(
                 bankService: banco,
+                onDeposit: _depositarDinero,
+                onTransfer: _transferirDinero,
+                onWithdraw: _sacarDinero
               ),
               Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -142,8 +157,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class ListaCuentas extends StatelessWidget {
   final BankService bankService;
+  final void Function(String, double) onDeposit;
+  final void Function(String, double, String) onTransfer;
+  final void Function(String, double) onWithdraw;
 
-  const ListaCuentas({super.key, required this.bankService});
+  const ListaCuentas({super.key, required this.bankService, required this.onDeposit, required this.onTransfer, required this.onWithdraw});
+
 
   @override
   Widget build(BuildContext context) {
@@ -176,17 +195,17 @@ class ListaCuentas extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () => null,//onTransfer(cuenta),
+                onTap: () => _mostrarDialogoTransferencia(context, cuenta.accountNumber),
                 child: const Icon(CupertinoIcons.arrow_right_arrow_left),
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () => null,//onTransfer(cuenta),
+                onTap: () => _mostrarDialogoOperacionSimple(context, 'deposit', cuenta.accountNumber),
                 child: const Icon(CupertinoIcons.add),
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () => null,//onTransfer(cuenta),
+                onTap: () => _mostrarDialogoOperacionSimple(context, 'withdraw', cuenta.accountNumber),
                 child: const Icon(CupertinoIcons.minus),
               ),
             ],
@@ -196,5 +215,95 @@ class ListaCuentas extends StatelessWidget {
       }).toList(),
     );
   }
+
+
+  void _mostrarDialogoOperacionSimple(BuildContext context, String tipo, String cuentaOrigen) {
+    final TextEditingController cantidadController = TextEditingController();
+
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(tipo == 'deposit' ? 'Depositar dinero' : 'Sacar dinero'),
+        content: Column(
+          children: [
+            const SizedBox(height: 8),
+            CupertinoTextField(
+              controller: cantidadController,
+              placeholder: 'Cantidad',
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+            ),
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: const Text('Cancelar'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          CupertinoDialogAction(
+            child: const Text('Aceptar'),
+            onPressed: () {
+              final cantidad = double.tryParse(cantidadController.text);
+              if (cantidad != null) {
+                if (tipo == 'deposit') {
+                  onDeposit(cuentaOrigen, cantidad);
+                } else {
+                  onWithdraw(cuentaOrigen, cantidad);
+                }
+              }
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _mostrarDialogoTransferencia(BuildContext context, String cuentaOrigen) {
+    final TextEditingController cantidadController = TextEditingController();
+    final TextEditingController destinoController = TextEditingController();
+
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Transferencia'),
+        content: Column(
+          children: [
+            const SizedBox(height: 8),
+            CupertinoTextField(
+              controller: cantidadController,
+              placeholder: 'Cantidad',
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+            ),
+            const SizedBox(height: 8),
+            CupertinoTextField(
+              controller: destinoController,
+              placeholder: 'Cuenta destino',
+            ),
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: const Text('Cancelar'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          CupertinoDialogAction(
+            child: const Text('Aceptar'),
+            onPressed: () {
+              final cantidad = double.tryParse(cantidadController.text);
+              final destino = destinoController.text.trim();
+              if (cantidad != null && destino.isNotEmpty) {
+                onTransfer(cuentaOrigen, cantidad, destino);
+              }
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
 }
+
 
