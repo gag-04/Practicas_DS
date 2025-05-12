@@ -33,7 +33,7 @@ class BankService{
 
     final cuentaDestino = accounts[numCuentaDestino];
     if (cuentaDestino == null) {
-      throw StateError('La cuenta $numCuenta no existe.');
+      throw StateError('La cuenta $numCuentaDestino no existe.');
     }
 
     TransferTransaction transaction = TransferTransaction(amount, cuentaDestino);

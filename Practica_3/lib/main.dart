@@ -245,13 +245,20 @@ class ListaCuentas extends StatelessWidget {
             onPressed: () {
               final cantidad = double.tryParse(cantidadController.text);
               if (cantidad != null) {
-                if (tipo == 'deposit') {
-                  onDeposit(cuentaOrigen, cantidad);
-                } else {
-                  onWithdraw(cuentaOrigen, cantidad);
+                try {
+                  if (tipo == 'deposit') {
+                    onDeposit(cuentaOrigen, cantidad);
+                  } else {
+                    onWithdraw(cuentaOrigen, cantidad);
+                  }
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  Navigator.of(context).pop();
+                  Future.delayed(Duration.zero, () {
+                    _mostrarError(context, e.toString());
+                  });
                 }
               }
-              Navigator.of(context).pop();
             },
           ),
         ],
@@ -294,9 +301,39 @@ class ListaCuentas extends StatelessWidget {
               final cantidad = double.tryParse(cantidadController.text);
               final destino = destinoController.text.trim();
               if (cantidad != null && destino.isNotEmpty) {
-                onTransfer(cuentaOrigen, cantidad, destino);
+                try {
+                  onTransfer(cuentaOrigen, cantidad, destino);
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  Navigator.of(context).pop();
+                  Future.delayed(Duration.zero, () {
+                    _mostrarError(context, e.toString());
+                  });
+                }
               }
-              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _mostrarError(BuildContext context, String mensaje) {
+    String errorMessage = mensaje;
+    if (mensaje.contains("Bad state")) {
+      errorMessage = mensaje.split(":")[1].trim(); // Extract only the message part after "StateError"
+    }
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext alertContext) => CupertinoAlertDialog(
+        title: const Text('Error'),
+        content: Text(errorMessage),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(alertContext).pop();
             },
           ),
         ],
@@ -305,5 +342,3 @@ class ListaCuentas extends StatelessWidget {
   }
 
 }
-
-
