@@ -1,7 +1,9 @@
 // hacer un fromJson y un toJson, comn su formato correspondiente
 
 //las llamadas son : http.post, get, delete,put....
-abstract class HabitacionGeneral{
+import 'package:proyecto_hoteles/hoteles.dart';
+
+abstract class HabitacionGeneral extends CadenaHotelera{
 
   void decorar();
   int? get capacidad;
@@ -32,7 +34,7 @@ abstract class Decorador implements HabitacionGeneral{
 }
 
 class Suite extends Decorador {
-  Suite(HabitacionGeneral habitacion) : super(habitacion);
+  Suite(super.habitacion);
 
   @override
   void decorar() {
@@ -48,10 +50,15 @@ class Suite extends Decorador {
 
   @override
   double? get precio => habitacion.precio != null ? habitacion.precio! * 1.8 : null;
+
+  @override
+  void mostrar(){
+    print("Es una suite");
+  }
 }
 
 class HabFamiliar extends Decorador {
-  HabFamiliar(HabitacionGeneral habitacion) : super(habitacion);
+  HabFamiliar(super.habitacion);
 
   @override
   void decorar() {
@@ -67,6 +74,11 @@ class HabFamiliar extends Decorador {
 
   @override
   double? get precio => habitacion.precio != null ? habitacion.precio! * 0.7 : null;
+
+  @override
+  void mostrar(){
+    print("Es una habitación familiar");
+  }
 }
 
 
