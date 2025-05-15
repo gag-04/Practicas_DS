@@ -1,0 +1,75 @@
+// hacer un fromJson y un toJson, comn su formato correspondiente
+
+//las llamadas son : http.post, get, delete,put....
+abstract class HabitacionGeneral{
+
+  void decorar();
+  int? get capacidad;
+  double? get precio;
+  bool? get esta_ocupada;
+
+  Map<String,dynamic> toJson();
+}
+
+abstract class Decorador implements HabitacionGeneral{
+  final HabitacionGeneral habitacion;
+
+  Decorador(this.habitacion);
+
+  @override
+  int? get capacidad => habitacion.capacidad;
+
+  @override
+  double? get precio => habitacion.precio;
+
+  @override
+  bool? get esta_ocupada => habitacion.esta_ocupada;
+
+  @override
+  Map<String,dynamic> toJson() => habitacion.toJson();
+
+
+}
+
+class Suite extends Decorador {
+  Suite(HabitacionGeneral habitacion) : super(habitacion);
+
+  @override
+  void decorar() {
+    print('Decorando como Suite');
+    print('→ Capacidad actualizada a 6 personas');
+    print('→ Precio incrementado en un 80%');
+
+    print('Suite final: capacidad 6, precio \$${(precio! * 1.8).toStringAsFixed(2)}');
+
+  }
+  @override
+  int? get capacidad => 6;
+
+  @override
+  double? get precio => habitacion.precio != null ? habitacion.precio! * 1.8 : null;
+}
+
+class HabFamiliar extends Decorador {
+  HabFamiliar(HabitacionGeneral habitacion) : super(habitacion);
+
+  @override
+  void decorar() {
+    print('Decorando como Habitación Familiar');
+    print('→ Capacidad limitada a 4 personas');
+    print('→ Precio reducido un 30%');
+
+    print('Familiar final: capacidad 4, precio \$${(precio! * 0.7).toStringAsFixed(2)}');
+  }
+
+  @override
+  int? get capacidad => 4;
+
+  @override
+  double? get precio => habitacion.precio != null ? habitacion.precio! * 0.7 : null;
+}
+
+
+
+
+
