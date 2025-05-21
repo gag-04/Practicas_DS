@@ -33,6 +33,12 @@ abstract class Decorador implements HabitacionGeneral{
   @override
   Map<String,dynamic> toJson() => habitacion.toJson();
 
+  @override
+  bool? get nodoHoja => habitacion.nodoHoja;
+
+  @override
+  int? get idPadre => habitacion.idPadre;
+
 
 }
 
@@ -55,8 +61,32 @@ class Suite extends Decorador {
   double? get precio => habitacion.precio != null ? habitacion.precio! * 1.8 : null;
 
   @override
+  bool? get nodoHoja => habitacion.nodoHoja;
+
+  @override
+  int? get idPadre => habitacion.idPadre;
+
+  @override
+  int? get id => habitacion.id;
+
+  @override
   void mostrar(){
     print("Es una suite");
+  }
+
+  @override
+  set id(int? _id) {
+    habitacion.id = _id;
+  }
+
+  @override
+  set idPadre(int? _idPadre) {
+    habitacion.idPadre = _idPadre;
+  }
+
+  @override
+  set nodoHoja(bool? _nodoHoja) {
+    habitacion.nodoHoja = _nodoHoja;
   }
 }
 
@@ -81,6 +111,19 @@ class HabFamiliar extends Decorador {
   @override
   void mostrar(){
     print("Es una habitación familiar");
+  }
+
+  @override
+  int? id;
+
+  @override
+  set idPadre(int? _idPadre) {
+    habitacion.idPadre = _idPadre;
+  }
+
+  @override
+  set nodoHoja(bool? _nodoHoja) {
+    habitacion.nodoHoja = _nodoHoja;
   }
 }
 

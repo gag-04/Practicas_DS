@@ -2,10 +2,19 @@
 
 //las llamadas son : http.post, get, delete,put....
 
+import 'package:proyecto_hoteles/hoteles.dart';
 import 'package:proyecto_hoteles/logica_decorador.dart';
 
-class Habitacion implements HabitacionGeneral{
+class Habitacion implements HabitacionGeneral , CadenaHotelera {
+  //Atributos CadenaHotelera
+  @override
   int? id;
+  @override
+  bool? nodoHoja;
+  @override
+  int? idPadre;
+
+  //Atributos HabitacionGeneral
   @override
   int? capacidad;
   @override
@@ -13,8 +22,11 @@ class Habitacion implements HabitacionGeneral{
   @override
   bool? estaOcupada;
 
+
   Habitacion({this.id, this.capacidad, this.precio,
-      this.estaOcupada});
+      this.estaOcupada, this.idPadre}){
+    nodoHoja = (idPadre == null);
+  }
 
 
 
@@ -49,19 +61,26 @@ class Habitacion implements HabitacionGeneral{
 
     // Convertir esta_ocupada si es necesario (podría llegar como String "true"/"false")
     bool? estaOcupadaValue;
-    if (json['esta_ocupada'] != null) {
-      if (json['esta_ocupada'] is String) {
-        estaOcupadaValue = json['esta_ocupada'].toLowerCase() == 'true';
+    if (json['estaOcupada'] != null) {
+      if (json['estaOcupada'] is String) {
+        estaOcupadaValue = json['estaOcupada'].toLowerCase() == 'true';
       } else {
-        estaOcupadaValue = json['esta_ocupada'] as bool?;
+        estaOcupadaValue = json['estaOcupada'] as bool?;
       }
     }
+
+    int? idPadreValue;
+    if (json['idPadre'] != null) {
+      idPadreValue = json['idPadre'] is String ? int.parse(json['idPadre']) : json['idPadre'] as int?;
+    }
+
 
     return Habitacion(
       id: idValue,
       capacidad: capacidadValue,
       precio: precioValue,
       estaOcupada: estaOcupadaValue,
+      idPadre: idPadreValue
     );
   }
 @override
@@ -71,8 +90,9 @@ class Habitacion implements HabitacionGeneral{
         'id' : id,
         'capacidad' : capacidad,
         'precio' : precio,
-        'estaOcupada' : estaOcupada
-
+        'estaOcupada' : estaOcupada,
+        'nodoHoja' : nodoHoja,
+        'idPadre' : idPadre
     };
   }
 

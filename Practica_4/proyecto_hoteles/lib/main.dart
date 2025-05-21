@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'habitacion.dart';
 import 'gestor_habitacion.dart';
+import 'hoteles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,20 @@ class HabitacionesHttpDemo extends StatefulWidget {
 
 class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   final gestor = GestorDeHabitaciones([]);
+  Hotel? currentHotel = null;
+
+  Hotel hotel1 = Hotel("Hotel 1");
+  Hotel hotel2 = Hotel("Hotel 2");
+  Hotel admin = Hotel("Admin");
+
+  late List<Hotel> hoteles;
+
+  @override
+  void initState() {
+    super.initState();
+    hoteles = [hotel1, hotel2, admin];
+  }
+
   bool cargando = false;
   String mensaje = "";
 
@@ -37,7 +52,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       mensaje = "Cargando habitaciones...";
     });
     try {
-      await gestor.cargarHabs(1); // Cambia el ID si es necesario
+      await gestor.cargarHabs(1, currentHotel?.id); // Cambia el ID si es necesario
       setState(() {
         mensaje = "Habitaciones cargadas correctamente";
       });

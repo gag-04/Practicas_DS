@@ -9,8 +9,12 @@ class GestorDeHabitaciones {
   GestorDeHabitaciones(this.mishabs);
 
 
-  Future<void> cargarHabs(int id) async {
-    final response = await http.get(Uri.parse('$apiUrl?id=$id'));
+  Future<void> cargarHabs(int id, int? idPadre) async {
+    String url = 'apiUrl?id=$id';
+    if (idPadre != null){
+      url += '&idPadre=$idPadre';
+    }
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       List<dynamic> habsJson = json.decode(response.body);
 
