@@ -1,0 +1,84 @@
+// hacer un fromJson y un toJson, comn su formato correspondiente
+
+//las llamadas son : http.post, get, delete,put....
+
+import 'package:proyecto_hoteles/logica_decorador.dart';
+
+class Habitacion implements HabitacionGeneral{
+  int? id;
+  @override
+  int? capacidad;
+  @override
+  double? precio;
+  @override
+  bool? estaOcupada;
+
+  Habitacion({this.id, this.capacidad, this.precio,
+      this.estaOcupada});
+
+
+
+
+  @override
+  void mostrar(){
+    print("Esto es una habiación normal");
+  }
+  @override
+  void decorar(){
+    print('Habitación base: capacidad $capacidad, precio \$${precio?.toStringAsFixed(2)}');
+  }
+
+  factory Habitacion.fromJson(Map<String, dynamic> json){
+    // Convertir id si viene como String
+    int? idValue;
+    if (json['id'] != null) {
+      idValue = json['id'] is String ? int.parse(json['id']) : json['id'] as int?;
+    }
+
+    // Convertir capacidad si viene como String
+    int? capacidadValue;
+    if (json['capacidad'] != null) {
+      capacidadValue = json['capacidad'] is String ? int.parse(json['capacidad']) : json['capacidad'] as int?;
+    }
+
+    // Convertir precio si viene como String
+    double? precioValue;
+    if (json['precio'] != null) {
+      precioValue = json['precio'] is String ? double.parse(json['precio']) : json['precio'] as double?;
+    }
+
+    // Convertir esta_ocupada si es necesario (podría llegar como String "true"/"false")
+    bool? estaOcupadaValue;
+    if (json['esta_ocupada'] != null) {
+      if (json['esta_ocupada'] is String) {
+        estaOcupadaValue = json['esta_ocupada'].toLowerCase() == 'true';
+      } else {
+        estaOcupadaValue = json['esta_ocupada'] as bool?;
+      }
+    }
+
+    return Habitacion(
+      id: idValue,
+      capacidad: capacidadValue,
+      precio: precioValue,
+      estaOcupada: estaOcupadaValue,
+    );
+  }
+@override
+  Map<String,dynamic> toJson(){
+    return{
+      if (id != null)
+        'id' : id,
+        'capacidad' : capacidad,
+        'precio' : precio,
+        'estaOcupada' : estaOcupada
+
+    };
+  }
+
+
+
+}
+
+
+
