@@ -52,7 +52,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       mensaje = "Cargando habitaciones...";
     });
     try {
-      await gestor.cargarHabs(1, currentHotel?.id); // Cambia el ID si es necesario
+      await gestor.cargarHabitaciones(currentHotel?.id); // Cambia el ID si es necesario
       setState(() {
         mensaje = "Habitaciones cargadas correctamente";
       });
@@ -88,10 +88,11 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
 
   Future<void> marcarOcupada(Habitacion h) async {
     try {
-      await gestor.ocupada(h);
+      await gestor.ocupada(h.id!);
       setState(() {
         mensaje = "Habitación ${h.id} actualizada";
       });
+
     } catch (e) {
       setState(() {
         mensaje = "Error al actualizar: $e";

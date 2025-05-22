@@ -9,17 +9,30 @@ class GestorDeHabitaciones {
   GestorDeHabitaciones(this.mishabs);
 
 
-  Future<void> cargarHabs(int id, int? idPadre) async {
-    String url = 'apiUrl?id=$id';
-    if (idPadre != null){
-      url += '&idPadre=$idPadre';
+  Future<Habitacion> cargarHabitacion(int id) async {
+    final response = await http.get(Uri.parse('$apiUrl/$id'));
+    if (response.statusCode == 200) {
+      final jsonMap = json.decode(response.body);
+      final hab = Habitacion.fromJson(jsonMap);
+
+      mishabs.removeWhere((h) => h.id == id); // Evita duplicados
+      mishabs.add(hab);
+      return hab;
+    } else {
+      throw Exception('Failed to load habitacion with id $id');
     }
+  }
+
+  Future<List<Habitacion>> cargarHabitaciones(int? idPadre) async {
+    String url = '$apiUrl?idPadre=$idPadre';
+
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       List<dynamic> habsJson = json.decode(response.body);
 
       mishabs.clear();
       mishabs.addAll(habsJson.map((json) => Habitacion.fromJson(json)).toList());
+      return mishabs;
     } else {
       throw Exception('Failed to load tasks');
     }
@@ -43,7 +56,7 @@ class GestorDeHabitaciones {
   }
 
   Future<bool> existe(int id) async {
-    final response = await http.delete(
+    final response = await http.get(
       Uri.parse('$apiUrl/$id'),
     );
 
@@ -52,7 +65,7 @@ class GestorDeHabitaciones {
 
   Future<void> eliminar(int id) async {
     final response = await http.delete(
-      Uri.parse('$apiUrl/$id'),
+      Uri.parse('$apiUrl/$id')
     );
     if (response.statusCode == 200) {
       mishabs.removeWhere((t) => t.id == id);
@@ -61,10 +74,11 @@ class GestorDeHabitaciones {
     }
   }
 
-  Future<void> ocupada(Habitacion hab) async {
+  Future<void> ocupada(int id) async {
+    await cargarHabitacion(id);
+    final hab = mishabs.firstWhere((h) => h.id == id);
     bool nuevoEstadoCompletado = !(hab.estaOcupada ?? false);
 
-    // Aquí también deberías anidar bajo 'habitacion' para consistencia
     final payload = {
       'habitacion': {
         'estaOcupada': nuevoEstadoCompletado,
@@ -72,7 +86,7 @@ class GestorDeHabitaciones {
     };
 
     final response = await http.patch(
-      Uri.parse('$apiUrl/${hab.id}'),
+      Uri.parse('$apiUrl/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
