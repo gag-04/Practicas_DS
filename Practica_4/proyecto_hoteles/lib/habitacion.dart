@@ -59,13 +59,14 @@ class Habitacion implements HabitacionGeneral , CadenaHotelera {
       precioValue = json['precio'] is String ? double.parse(json['precio']) : json['precio'] as double?;
     }
 
-    // Convertir esta_ocupada si es necesario (podría llegar como String "true"/"false")
-    bool? estaOcupadaValue;
-    if (json['estaOcupada'] != null) {
-      if (json['estaOcupada'] is String) {
-        estaOcupadaValue = json['estaOcupada'].toLowerCase() == 'true';
-      } else {
-        estaOcupadaValue = json['estaOcupada'] as bool?;
+    // Manejo de estaOcupada con valor por defecto y chequeo de tipo
+    bool estaOcupadaValue = false; // valor por defecto
+    if (json.containsKey('estaOcupada')) {
+      final raw = json['estaOcupada'];
+      if (raw is String) {
+        estaOcupadaValue = raw.toLowerCase() == 'true';
+      } else if (raw is bool) {
+        estaOcupadaValue = raw;
       }
     }
 

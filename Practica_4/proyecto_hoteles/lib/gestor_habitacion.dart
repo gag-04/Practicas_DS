@@ -15,8 +15,6 @@ class GestorDeHabitaciones {
       final jsonMap = json.decode(response.body);
       final hab = Habitacion.fromJson(jsonMap);
 
-      mishabs.removeWhere((h) => h.id == id); // Evita duplicados
-      mishabs.add(hab);
       return hab;
     } else {
       throw Exception('Failed to load habitacion with id $id');
@@ -75,15 +73,18 @@ class GestorDeHabitaciones {
   }
 
   Future<void> ocupada(int id) async {
-    await cargarHabitacion(id);
     final hab = mishabs.firstWhere((h) => h.id == id);
     bool nuevoEstadoCompletado = !(hab.estaOcupada ?? false);
+
+    print('Cambiando habitación $id de ${hab.estaOcupada} a $nuevoEstadoCompletado');
 
     final payload = {
       'habitacion': {
         'estaOcupada': nuevoEstadoCompletado,
       }
     };
+
+    print('Payload enviado: ${jsonEncode(payload)}');
 
     final response = await http.patch(
       Uri.parse('$apiUrl/$id'),
@@ -93,10 +94,14 @@ class GestorDeHabitaciones {
       body: jsonEncode(payload),
     );
 
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
     if (response.statusCode == 200) {
       hab.estaOcupada = nuevoEstadoCompletado;
+      print('Habitación actualizada localmente a: ${hab.estaOcupada}');
     } else {
-      throw Exception('Failed to update task');
+      throw Exception('Failed to update task: ${response.statusCode} - ${response.body}');
     }
   }
 }

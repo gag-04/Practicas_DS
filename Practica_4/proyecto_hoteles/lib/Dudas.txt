@@ -1,0 +1,7 @@
+Como hacer los usuarios, si crear una columna nueva o si directamente usar el idPadre como usuario
+
+Los test  siguen sin cargar en la bd, ni siquiera usando gestor global.
+
+En la bd se generan ocupado, nodoHoja y idPadre a null, Pero el test de estaOcupado lo pasa bien y se supone que está actualizando bien la bd
+
+Como presentamos los requisitos
