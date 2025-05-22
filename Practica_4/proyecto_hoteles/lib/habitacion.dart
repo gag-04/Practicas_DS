@@ -2,8 +2,8 @@
 
 //las llamadas son : http.post, get, delete,put....
 
-import 'package:proyecto_hoteles/hoteles.dart';
-import 'package:proyecto_hoteles/logica_decorador.dart';
+import 'package:p4_hoteles/hoteles.dart';
+import 'package:p4_hoteles/logica_decorador.dart';
 
 class Habitacion implements HabitacionGeneral , CadenaHotelera {
   //Atributos CadenaHotelera
@@ -20,11 +20,11 @@ class Habitacion implements HabitacionGeneral , CadenaHotelera {
   @override
   double? precio;
   @override
-  bool? estaOcupada;
+  bool estaOcupada;
 
 
   Habitacion({this.id, this.capacidad, this.precio,
-      this.estaOcupada, this.idPadre}){
+    this.estaOcupada= false, this.idPadre}){
     nodoHoja = (idPadre == null);
   }
 
@@ -59,14 +59,13 @@ class Habitacion implements HabitacionGeneral , CadenaHotelera {
       precioValue = json['precio'] is String ? double.parse(json['precio']) : json['precio'] as double?;
     }
 
-    // Manejo de estaOcupada con valor por defecto y chequeo de tipo
-    bool estaOcupadaValue = false; // valor por defecto
-    if (json.containsKey('estaOcupada')) {
-      final raw = json['estaOcupada'];
-      if (raw is String) {
-        estaOcupadaValue = raw.toLowerCase() == 'true';
-      } else if (raw is bool) {
-        estaOcupadaValue = raw;
+    // Convertir esta_ocupada si es necesario (podría llegar como String "true"/"false")
+    bool estaOcupadaValue = false;
+    if (json['esta_ocupada'] != null) {
+      if (json['esta_ocupada'] is String) {
+        estaOcupadaValue = json['esta_ocupada'].toLowerCase() == 'true';
+      } else {
+        estaOcupadaValue = json['esta_ocupada'] as bool;
       }
     }
 
@@ -77,29 +76,27 @@ class Habitacion implements HabitacionGeneral , CadenaHotelera {
 
 
     return Habitacion(
-      id: idValue,
-      capacidad: capacidadValue,
-      precio: precioValue,
-      estaOcupada: estaOcupadaValue,
-      idPadre: idPadreValue
+        id: idValue,
+        capacidad: capacidadValue,
+        precio: precioValue,
+        estaOcupada: estaOcupadaValue,
+        idPadre: idPadreValue
     );
   }
-@override
+  @override
   Map<String,dynamic> toJson(){
     return{
       if (id != null)
         'id' : id,
-        'capacidad' : capacidad,
-        'precio' : precio,
-        'estaOcupada' : estaOcupada,
-        'nodoHoja' : nodoHoja,
-        'idPadre' : idPadre
+      'capacidad' : capacidad,
+      'precio' : precio,
+      'esta_ocupada' : estaOcupada,
+      'nodo_hoja' : nodoHoja,
+      'id_padre' : idPadre,
+      'tipo' : 'normal',
     };
   }
 
 
 
 }
-
-
-

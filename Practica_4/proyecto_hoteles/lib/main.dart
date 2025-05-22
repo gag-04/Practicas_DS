@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'habitacion.dart';
 import 'gestor_habitacion.dart';
 import 'hoteles.dart';
-
-final gestor = GestorDeHabitaciones([]);
+import 'habitacion.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,18 +29,21 @@ class HabitacionesHttpDemo extends StatefulWidget {
 }
 
 class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
+  final gestor = GestorDeHabitaciones([]);
   Hotel? currentHotel;
+
 
   Hotel hotel1 = Hotel("Hotel 1");
   Hotel hotel2 = Hotel("Hotel 2");
-  Hotel admin = Hotel("Admin");
+  Hotel test = Hotel("Test");
 
   late List<Hotel> hoteles;
+
 
   @override
   void initState() {
     super.initState();
-    hoteles = [hotel1, hotel2, admin];
+    hoteles = [hotel1, hotel2, test];
     currentHotel = hoteles.first;
   }
 
@@ -76,7 +78,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       capacidad: 3,
       precio: 80.0,
       estaOcupada: false,
-      id: currentHotel!.id,
+      idPadre: currentHotel!.id,
     );
     try {
       await gestor.agregar(nueva);
@@ -114,18 +116,53 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Gestión de Habitaciones")),
+      appBar: AppBar(
+        // Para que no opaque tu fondo
+        elevation: 0, // Sin sombra que interfiera
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            color: Colors.lightBlueAccent, // Color del fondo de toda la barra
+          ),
+        ),
+        title: Container(
+          decoration: BoxDecoration(
+             // Fondo gris claro del título
+            borderRadius: BorderRadius.circular(8),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: const Text(
+            "Gestión de Habitaciones",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.indigo,
+              shadows: [
+                Shadow(
+                  offset: Offset(2, 2),
+                  blurRadius: 4.0,
+                  color: Colors.black45,
+                ),
+              ],
+            ),
+          ),
+        ),
+        centerTitle: true,
+      ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Escoge el hotel donde quieres realizar la gestión:",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+            const Center(
+              child: Text(
+                "Escoge el hotel donde quieres realizar la gestión:",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 10),
@@ -163,13 +200,29 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: currentHotel == null ? null : cargar,
-              child: const Text("Cargar habitaciones"),
-            ),
-            ElevatedButton(
-              onPressed: currentHotel == null ? null : agregar,
-              child: const Text("Agregar nueva habitación"),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    onPressed: currentHotel == null ? null : cargar,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green, // Fondo distinto para el botón 1
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    ),
+                    child: const Text("Cargar habitaciones",),
+                  ),
+                  const SizedBox(height: 20), // Separación de 20 px
+                  ElevatedButton(
+                    onPressed: currentHotel == null ? null : agregar,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange, // Fondo distinto para el botón 2
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    ),
+                    child: const Text("Agregar nueva habitación"),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Text(

@@ -1,16 +1,39 @@
-import 'package:proyecto_hoteles/main.dart';
+import 'package:p4_hoteles/gestor_habitacion.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:proyecto_hoteles/habitacion.dart';
+import 'package:p4_hoteles/habitacion.dart';
 
 void main() {
   group("Operaciones conexion",(){
-    test('Agrega y elimina una habitacion correctamente', () async {
-      final nuevaHabitacion = Habitacion(capacidad:3, precio: 30.0,estaOcupada: false);
-      int id = await gestor.agregar(nuevaHabitacion);
+    final gestor = GestorDeHabitaciones([]);
+    int id=-1;
+    int id_test=100;
+
+    //test('Agrega y elimina una habitacion correctamente', () async {
+    //  final nuevaHabitacion = Habitacion(capacidad:3, precio: 30.0,estaOcupada: false);
+      //int id = await gestor.agregar(nuevaHabitacion);
+    //  expect(await gestor.existe(id), isTrue);
+    //  await gestor.eliminar(id);
+    //  expect(await gestor.existe(id), isFalse);
+   // });
+
+    test('Agregar habitacion correctamente', () async {
+      final nuevaHabitacion = Habitacion(capacidad:3, precio: 30.0,estaOcupada: false,idPadre: id_test);
+      id = await gestor.agregar(nuevaHabitacion);
       expect(await gestor.existe(id), isTrue);
-      await gestor.eliminar(id);
-      expect(await gestor.existe(id), isFalse);
     });
+
+    test('Eliminar una habitacion correctamente', () async {
+
+      final nuevaHabitacion = Habitacion(capacidad:4, precio: 40.0, estaOcupada: false);
+      final id = await gestor.agregar(nuevaHabitacion);
+
+      expect(await gestor.existe(id), isTrue);  // Verificas que exista
+
+      await gestor.eliminar(id);
+
+      expect(await gestor.existe(id), isFalse); // Verificas que se eliminó
+    });
+
 
     test('Modifica una habitacion correctamente', () async {
       final nuevaHabitacion = Habitacion(capacidad:300, precio: 3000.0, estaOcupada: false);
@@ -31,14 +54,19 @@ void main() {
       expect(habitacionModificada.estaOcupada, isTrue);
 
       // Limpiar
-      await gestor.eliminar(id);
+
     });
 
+    test('Cargar habitaciones correctamente',() async{
+      final nuevaHabitacion = Habitacion(capacidad:5, precio: 300, estaOcupada: false);
+      int id = await gestor.agregar(nuevaHabitacion);
+      expect(await gestor.existe(id), isTrue);
+
+      // Debug: verificar estado inicial
+      await gestor.cargarHabitacion(id);
 
 
-});
-  }
+    });
 
-
-
-
+  });
+}

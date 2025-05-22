@@ -1,7 +1,7 @@
 // hacer un fromJson y un toJson, comn su formato correspondiente
 
 //las llamadas son : http.post, get, delete,put....
-import 'package:proyecto_hoteles/hoteles.dart';
+import 'package:p4_hoteles/hoteles.dart';
 
 abstract class HabitacionGeneral implements CadenaHotelera{
 
@@ -88,6 +88,12 @@ class Suite extends Decorador {
   set nodoHoja(bool? _nodoHoja) {
     habitacion.nodoHoja = _nodoHoja;
   }
+  @override
+  Map<String,dynamic> toJson() {
+    final baseJson = habitacion.toJson();
+    baseJson['tipo'] = 'suite';
+    return baseJson;
+  }
 }
 
 class HabFamiliar extends Decorador {
@@ -125,9 +131,10 @@ class HabFamiliar extends Decorador {
   set nodoHoja(bool? _nodoHoja) {
     habitacion.nodoHoja = _nodoHoja;
   }
+  @override
+  Map<String,dynamic> toJson() {
+    final baseJson = habitacion.toJson();
+    baseJson['tipo'] = 'familiar';
+    return baseJson;
+  }
 }
-
-
-
-
-
