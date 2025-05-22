@@ -50,12 +50,12 @@ class GestorDeHabitaciones {
     return (response.statusCode == 200);
   }
 
-  Future<void> eliminar(Habitacion hab) async {
+  Future<void> eliminar(int id) async {
     final response = await http.delete(
-      Uri.parse('$apiUrl/${hab.id}'),
+      Uri.parse('$apiUrl/$id'),
     );
     if (response.statusCode == 200) {
-      mishabs.removeWhere((t) => t.id == hab.id);
+      mishabs.removeWhere((t) => t.id == id);
     } else {
       throw Exception('Failed to delete task');
     }
