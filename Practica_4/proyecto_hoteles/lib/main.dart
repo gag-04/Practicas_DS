@@ -33,9 +33,8 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   Hotel? currentHotel;
 
 
-  Hotel hotel1 = Hotel("Hotel 1", null, null);
-  Hotel hotel2 = Hotel("Hotel 2", null, null);
-  Hotel test = Hotel("Test", null, null);
+  Hotel hotel1 = Hotel("Cadena Hotelera 1", null, null);
+  Hotel hotel2 = Hotel("Cadena Hotelera 2", null, null);
 
   late List<Hotel> hoteles;
 
@@ -43,11 +42,14 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   @override
   void initState() {
     super.initState();
-    hoteles = [hotel1, hotel2, test];
-    gestor.agregar(hotel1);
-    gestor.agregar(hotel2);
-    gestor.agregar(test);
+    hoteles = [hotel1, hotel2];
+    _agregarHoteles();
     currentHotel = hoteles.first;
+  }
+
+  Future<void> _agregarHoteles() async {
+    await gestor.agregar(hotel1);
+    await gestor.agregar(hotel2);
   }
 
   bool cargando = false;
@@ -75,7 +77,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
     }
   }
 
-  Future<void> agregar() async {
+  Future<void> agregarHabitacion() async {
     if (currentHotel == null) return;
     final nueva = Habitacion(
       estaOcupada: false,
@@ -93,6 +95,22 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
     }
   }
 
+  Future<void> agregarHotel(String nombreValue) async {
+    if (currentHotel == null) return;
+    final nueva = Hotel(
+      nombreValue, null, currentHotel!.id
+    );
+    try {
+      await gestor.agregar(nueva);
+      setState(() {
+        mensaje = "Habitación añadida a ${currentHotel!.nombre}";
+      });
+    } catch (e) {
+      setState(() {
+        mensaje = "Error al agregar: $e";
+      });
+    }
+  }
 
 
   Future<void> eliminar(id) async {
@@ -232,12 +250,21 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                   ),
                   const SizedBox(height: 20), // Separación de 20 px
                   ElevatedButton(
-                    onPressed: currentHotel == null ? null : agregar,
+                    onPressed: currentHotel == null ? null : agregarHabitacion,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepOrange, // Fondo distinto para el botón 2
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     ),
                     child: const Text("Agregar nueva habitación"),
+                  ),
+                  const SizedBox(height: 20), // Separación de 20 px
+                  ElevatedButton(
+                    onPressed: currentHotel == null ? null : () => agregarHotel("Nuevo"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepOrange, // Fondo distinto para el botón 2
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    ),
+                    child: const Text("Agregar nuevo hotel"),
                   ),
                 ],
               ),
@@ -278,19 +305,34 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                       ),
                       child: ListTile(
                         title: Text(
-                          '🛏️ Habitación ID ${h.id}',
+                          '🛏️ Habitación Nº${h.id}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
-                          'Ocupada: ${h.estaOcupada ? "Sí" : "No"}',
+                            'Capacidad: \$${h.capacidad}    Precio: \$${h.precio}    Ocupada: ${h.estaOcupada== true ? "Sí" : "No"}'
                         ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            h.estaOcupada ? Icons.check_circle : Icons.radio_button_unchecked,
-                            color: h.estaOcupada ? Colors.green : Colors.grey,
-                          ),
-                          onPressed: h.id != null ? () => marcarOcupada(h.id!) : null,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min, // Para que el row ocupe el mínimo espacio necesario
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                h.estaOcupada ? Icons.check_circle : Icons.radio_button_unchecked,
+                                color: h.estaOcupada ? Colors.green : Colors.grey,
+                              ),
+                              onPressed: h.id != null ? () => marcarOcupada(h.id!) : null,
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onPressed: h.id != null ? () {
+                                eliminar(h.id!);
+                              } : null,
+                            ),
+                          ],
                         ),
+
                       ),
                     );
                   } else {

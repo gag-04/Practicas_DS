@@ -14,9 +14,10 @@ abstract class CadenaHotelera{
   }
 
   static CadenaHotelera fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('capacidad')) {
+    final tipo = json['tipo'] as String?;
+    if (tipo == 'Habitacion') {
       return Habitacion.fromJson(json);
-    } else if (json.containsKey('nombre')) {
+    } else if (tipo == 'Hotel') {
       return Hotel.fromJson(json);
     } else {
       throw Exception('No se pudo determinar el tipo de CadenaHotelera desde el JSON');

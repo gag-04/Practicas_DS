@@ -34,7 +34,11 @@ class GestorDeHabitaciones {
 
       mishabs.clear();
       mishabs.addAll(
-          habsJson.map((json) => CadenaHotelera.fromJson(json)).toList());
+        habsJson
+            .map((json) => CadenaHotelera.fromJson(json))
+            .where((item) => item.idPadre == idPadre)
+            .toList(),
+      );
       return mishabs;
     } else {
       throw Exception('Failed to load tasks');
@@ -54,6 +58,7 @@ class GestorDeHabitaciones {
       final json = jsonDecode(response.body);
       final nuevaInstancia = CadenaHotelera.fromJson(json);
       mishabs.add(nuevaInstancia);
+      hab.id = nuevaInstancia.id;
       return nuevaInstancia.id!;
     } else {
       throw Exception('Failed to add task: ${response.statusCode} - ${response.body}');
