@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  capacidad: 1
+  precio: 9.99
+  esta_ocupada: false
+  nodo_hoja: false
+  id_padre: 1
+
+two:
+  capacidad: 1
+  precio: 9.99
+  esta_ocupada: false
+  nodo_hoja: false
+  id_padre: 1
