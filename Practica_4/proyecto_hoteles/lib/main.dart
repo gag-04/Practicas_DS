@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'habitacion.dart';
 import 'gestor_habitacion.dart';
 import 'hoteles.dart';
-import 'habitacion.dart';
+import 'logica_decorador.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,9 +33,9 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   Hotel? currentHotel;
 
 
-  Hotel hotel1 = Hotel("Hotel 1");
-  Hotel hotel2 = Hotel("Hotel 2");
-  Hotel test = Hotel("Test");
+  Hotel hotel1 = Hotel("Hotel 1", null, null);
+  Hotel hotel2 = Hotel("Hotel 2", null, null);
+  Hotel test = Hotel("Test", null, null);
 
   late List<Hotel> hoteles;
 
@@ -44,6 +44,9 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   void initState() {
     super.initState();
     hoteles = [hotel1, hotel2, test];
+    gestor.agregar(hotel1);
+    gestor.agregar(hotel2);
+    gestor.agregar(test);
     currentHotel = hoteles.first;
   }
 
@@ -75,8 +78,6 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   Future<void> agregar() async {
     if (currentHotel == null) return;
     final nueva = Habitacion(
-      capacidad: 3,
-      precio: 80.0,
       estaOcupada: false,
       idPadre: currentHotel!.id,
     );
@@ -84,6 +85,23 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       await gestor.agregar(nueva);
       setState(() {
         mensaje = "Habitación añadida a ${currentHotel!.nombre}";
+      });
+    } catch (e) {
+      setState(() {
+        mensaje = "Error al agregar: $e";
+      });
+    }
+  }
+
+
+
+  Future<void> eliminar(id) async {
+    if (currentHotel == null) return;
+
+    try {
+      await gestor.eliminar(id);
+      setState(() {
+        mensaje = "Habitación eliminada de ${currentHotel!.nombre}";
       });
     } catch (e) {
       setState(() {
@@ -236,28 +254,48 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                 itemCount: gestor.mishabs.length,
                 itemBuilder: (context, index) {
                   final h = gestor.mishabs[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: const BorderSide(color: Colors.blueAccent),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        'ID ${h.id} - Capacidad: ${h.capacidad}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+
+                  if (h is Hotel) {
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: const BorderSide(color: Colors.orangeAccent),
                       ),
-                      subtitle: Text(
-                          'Precio: \$${h.precio} - Ocupada: ${h.estaOcupada== true ? "Sí" : "No"}'),
-                      trailing: IconButton(
-                        icon: Icon(
-                          h.estaOcupada == true ? Icons.check_circle : Icons.radio_button_unchecked,
-                          color: h.estaOcupada == true? Colors.green : Colors.grey,
+                      child: ListTile(
+                        title: Text('🏨 Hotel: ${h.nombre}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                        onTap: () {
+                          // Aquí podrías implementar navegación a los hijos del hotel si se desea
+                        },
+                      ),
+                    );
+                  } else if (h is Habitacion) {
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: const BorderSide(color: Colors.blueAccent),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                          '🛏️ Habitación ID ${h.id}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        onPressed: () => marcarOcupada(h.id!),
+                        subtitle: Text(
+                          'Ocupada: ${h.estaOcupada ? "Sí" : "No"}',
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            h.estaOcupada ? Icons.check_circle : Icons.radio_button_unchecked,
+                            color: h.estaOcupada ? Colors.green : Colors.grey,
+                          ),
+                          onPressed: h.id != null ? () => marcarOcupada(h.id!) : null,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
                 },
               ),
             ),

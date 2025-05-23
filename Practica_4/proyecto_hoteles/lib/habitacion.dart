@@ -2,10 +2,10 @@
 
 //las llamadas son : http.post, get, delete,put....
 
-import 'package:p4_hoteles/hoteles.dart';
-import 'package:p4_hoteles/logica_decorador.dart';
+import 'hoteles.dart';
+import 'logica_decorador.dart';
 
-class Habitacion implements HabitacionGeneral , CadenaHotelera {
+class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
   //Atributos CadenaHotelera
   @override
   int? id;
@@ -23,43 +23,27 @@ class Habitacion implements HabitacionGeneral , CadenaHotelera {
   bool estaOcupada;
 
 
-  Habitacion({this.id, this.capacidad, this.precio,
+  Habitacion({this.id,
     this.estaOcupada= false, this.idPadre}){
     nodoHoja = (idPadre == null);
+    precio = 50;
+    capacidad = 2;
   }
 
 
 
 
-  @override
-  void mostrar(){
-    print("Esto es una habiación normal");
-  }
   @override
   void decorar(){
     print('Habitación base: capacidad $capacidad, precio \$${precio?.toStringAsFixed(2)}');
   }
 
   factory Habitacion.fromJson(Map<String, dynamic> json){
-    // Convertir id si viene como String
     int? idValue;
     if (json['id'] != null) {
       idValue = json['id'] is String ? int.parse(json['id']) : json['id'] as int?;
     }
 
-    // Convertir capacidad si viene como String
-    int? capacidadValue;
-    if (json['capacidad'] != null) {
-      capacidadValue = json['capacidad'] is String ? int.parse(json['capacidad']) : json['capacidad'] as int?;
-    }
-
-    // Convertir precio si viene como String
-    double? precioValue;
-    if (json['precio'] != null) {
-      precioValue = json['precio'] is String ? double.parse(json['precio']) : json['precio'] as double?;
-    }
-
-    // Convertir esta_ocupada si es necesario (podría llegar como String "true"/"false")
     bool estaOcupadaValue = false;
     if (json['esta_ocupada'] != null) {
       if (json['esta_ocupada'] is String) {
@@ -70,32 +54,28 @@ class Habitacion implements HabitacionGeneral , CadenaHotelera {
     }
 
     int? idPadreValue;
-    if (json['idPadre'] != null) {
-      idPadreValue = json['idPadre'] is String ? int.parse(json['idPadre']) : json['idPadre'] as int?;
+    if (json['id_padre'] != null) {
+      idPadreValue = json['id_padre'] is String ? int.parse(json['id_padre']) : json['id_padre'] as int?;
     }
-
 
     return Habitacion(
         id: idValue,
-        capacidad: capacidadValue,
-        precio: precioValue,
         estaOcupada: estaOcupadaValue,
         idPadre: idPadreValue
     );
   }
+
+
   @override
   Map<String,dynamic> toJson(){
-    return{
-      if (id != null)
-        'id' : id,
-      'capacidad' : capacidad,
-      'precio' : precio,
-      'esta_ocupada' : estaOcupada,
-      'nodo_hoja' : nodoHoja,
-      'id_padre' : idPadre,
-      'tipo' : 'normal',
-    };
+    final baseJson = super.toJson();
+    baseJson['capacidad'] = capacidad;
+    baseJson['precio'] = precio;
+    baseJson['esta_ocupada'] = estaOcupada;
+    baseJson['tipo'] = 'Habitacion';
+    return baseJson;
   }
+
 
 
 

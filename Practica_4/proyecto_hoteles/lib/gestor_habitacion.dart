@@ -1,19 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'habitacion.dart';
+import 'hoteles.dart';
 
 class GestorDeHabitaciones {
-  List<Habitacion> mishabs = [];
+  List<CadenaHotelera> mishabs = [];
   final String apiUrl = "http://localhost:3000/habitaciones";
 
   GestorDeHabitaciones(this.mishabs);
 
 
-  Future<Habitacion> cargarHabitacion(int id) async {
+  Future<CadenaHotelera> cargarHabitacion(int id) async {
     final response = await http.get(Uri.parse('$apiUrl/$id'));
     if (response.statusCode == 200) {
       final jsonMap = json.decode(response.body);
-      final hab = Habitacion.fromJson(jsonMap);
+
+      final hab = CadenaHotelera.fromJson(jsonMap);
 
       mishabs.removeWhere((h) => h.id == id); // Evita duplicados
       mishabs.add(hab);
@@ -23,7 +25,7 @@ class GestorDeHabitaciones {
     }
   }
 
-  Future<List<Habitacion>> cargarHabitaciones(int? idPadre) async {
+  Future<List<CadenaHotelera>> cargarHabitaciones(int? idPadre) async {
     String url = '$apiUrl?idPadre=$idPadre';
 
     final response = await http.get(Uri.parse(url));
@@ -31,29 +33,33 @@ class GestorDeHabitaciones {
       List<dynamic> habsJson = json.decode(response.body);
 
       mishabs.clear();
-      mishabs.addAll(habsJson.map((json) => Habitacion.fromJson(json)).toList());
+      mishabs.addAll(
+          habsJson.map((json) => CadenaHotelera.fromJson(json)).toList());
       return mishabs;
     } else {
       throw Exception('Failed to load tasks');
     }
   }
 
-  Future<int> agregar(Habitacion hab) async {
+  Future<int> agregar(CadenaHotelera hab) async {
+    final url = "http://localhost:3000/habitaciones";
+
     final response = await http.post(
-      Uri.parse(apiUrl),
+      Uri.parse(url),
       headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      body: jsonEncode({'habitacion': hab.toJson()}),
+      body: jsonEncode({'habitacion': hab.toJson()}),  // Aquí la diferencia
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final json = jsonDecode(response.body);
-      final creada = Habitacion.fromJson(json);
-      mishabs.add(creada);
-      return creada.id!;
+      final nuevaInstancia = CadenaHotelera.fromJson(json);
+      mishabs.add(nuevaInstancia);
+      return nuevaInstancia.id!;
     } else {
       throw Exception('Failed to add task: ${response.statusCode} - ${response.body}');
     }
   }
+
 
   Future<bool> existe(int id) async {
     final response = await http.get(
@@ -77,33 +83,35 @@ class GestorDeHabitaciones {
   Future<void> ocupada(int id) async {
     await cargarHabitacion(id);
     final hab = mishabs.firstWhere((h) => h.id == id);
-    bool nuevoEstadoCompletado = false;
 
-    if(hab.estaOcupada == false){
-      nuevoEstadoCompletado= true;
+    if (hab is Habitacion){
+      bool nuevoEstadoCompletado = false;
 
-    }
-  //  bool nuevoEstadoCompletado =
-   // !(hab.estaOcupada ?? false);
-
-    final payload = {
-      'habitacion': {
-        'esta_ocupada': nuevoEstadoCompletado,
+      if (hab.estaOcupada == false) {
+        nuevoEstadoCompletado = true;
       }
-    };
+      //  bool nuevoEstadoCompletado =
+      // !(hab.estaOcupada ?? false);
 
-    final response = await http.patch(
-      Uri.parse('$apiUrl/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(payload),
-    );
+      final payload = {
+        'habitacion': {
+          'esta_ocupada': nuevoEstadoCompletado,
+        }
+      };
 
-    if (response.statusCode == 200) {
-      hab.estaOcupada = nuevoEstadoCompletado;
-    } else {
-      throw Exception('Failed to update task');
+      final response = await http.patch(
+        Uri.parse('$apiUrl/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        hab.estaOcupada = nuevoEstadoCompletado;
+      } else {
+        throw Exception('Failed to update task');
+      }
     }
   }
 }
