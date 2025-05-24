@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:proyecto_hoteles/logica_decorador.dart';
 import 'habitacion.dart';
 import 'hoteles.dart';
 
@@ -117,6 +118,21 @@ class GestorDeHabitaciones {
       } else {
         throw Exception('Failed to update task');
       }
+    }
+  }
+
+
+
+
+  Future<void> actualizar(HabitacionGeneral habitacion) async {
+    final url = Uri.parse('http://localhost:3000/habitaciones/${habitacion.id}');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'habitacion': habitacion.toJson()})
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Error al actualizar habitación ${habitacion.id}');
     }
   }
 }

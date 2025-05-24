@@ -51,8 +51,8 @@ class Suite extends Decorador {
   @override
   void decorar() {
     print('Decorando como Suite');
-    this.habitacion.capacidad = 6;
-    this.habitacion.precio = 300;
+    habitacion.capacidad = (habitacion.capacidad ?? 1) + 2;
+    habitacion.precio = (habitacion.precio ?? 1.0) + 100;
   }
 
   @override
@@ -112,18 +112,17 @@ class HabFamiliar extends Decorador {
 
   @override
   void decorar() {
-    print('Decorando como Habitación Familiar');
-    this.habitacion.capacidad = 4;
-    this.habitacion.precio = 100;
+    print('Decorando como Familiar');
+    habitacion.capacidad = (habitacion.capacidad ?? 1) + 4;
+    habitacion.precio = (habitacion.precio ?? 1.0) + 50;
   }
-
 
   @override
   int? id;
 
   @override
   set idPadre(int? _idPadre) {
-    habitacion.idPadre = _idPadre;
+    this.habitacion.idPadre = _idPadre;
   }
 
   @override
@@ -149,6 +148,6 @@ class HabFamiliar extends Decorador {
 
   @override
   set precio(double? value) {
-    this.habitacion.precio = value;
+    habitacion.precio = value;
   }
 }

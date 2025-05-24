@@ -49,7 +49,9 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
 
   Future<void> _agregarHoteles() async {
     await gestor.agregar(hotel1);
+    hotel1.id = 1;
     await gestor.agregar(hotel2);
+    hotel2.id = 2;
   }
 
   bool cargando = false;
@@ -148,6 +150,29 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       mensaje = "";
     });
   }
+
+  Future<void> decorarComoSuite(int id) async {
+    try {
+      // Buscar la habitación por ID en la lista cargada
+      final original = gestor.mishabs.firstWhere((h) => h is Habitacion && h.id == id) as Habitacion;
+
+      // Crear una nueva instancia decorada
+      final decorada = Suite(original);
+      decorada.decorar();
+
+      decorada.id = original.id;
+      await gestor.actualizar(decorada);
+
+      setState(() {
+        mensaje = "Habitación $id decorada como Suite";
+      });
+    } catch (e) {
+      setState(() {
+        mensaje = "Error al decorar como Suite: $e";
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -314,6 +339,24 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min, // Para que el row ocupe el mínimo espacio necesario
                           children: [
+                            ElevatedButton(
+                              onPressed: currentHotel == null ? null : agregarHabitacion,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepOrange, // Fondo distinto para el botón 2
+                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                              ),
+                              child: const Text("Familiar"),
+                            ),
+                            ElevatedButton(
+                              onPressed: currentHotel != null && h.id != null
+                                  ? () => decorarComoSuite(h.id!)
+                                  : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepOrange, // Fondo distinto para el botón 2
+                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                              ),
+                              child: const Text("Suite"),
+                            ),
                             IconButton(
                               icon: Icon(
                                 h.estaOcupada ? Icons.check_circle : Icons.radio_button_unchecked,
