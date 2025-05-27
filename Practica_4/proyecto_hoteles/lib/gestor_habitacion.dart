@@ -6,17 +6,14 @@ import 'hoteles.dart';
 
 class GestorDeHabitaciones {
   List<CadenaHotelera> mishabs = [];
-  final String apiUrl;
+  final String apiUrl = "http://localhost:3000/habitaciones";
 
-  GestorDeHabitaciones(this.mishabs, {this.apiUrl = 'http://localhost:3000'});
+  GestorDeHabitaciones(this.mishabs);
 
 
   Future<CadenaHotelera> cargarHabitacion(int id) async {
     final response = await http.get(Uri.parse('$apiUrl/$id'));
-    print('Respuesta: ${response.body}');
-    print('Código de estado: ${response.statusCode}');
     if (response.statusCode == 200) {
-
       final jsonMap = json.decode(response.body);
 
       final hab = CadenaHotelera.fromJson(jsonMap);
@@ -34,8 +31,6 @@ class GestorDeHabitaciones {
     print('Cargando habitaciones con URL: $url');
 
     final response = await http.get(Uri.parse(url));
-    print('Respuesta: ${response.body}');
-    print('Código de estado: ${response.statusCode}');
     if (response.statusCode == 200) {
       List<dynamic> habsJson = json.decode(response.body);
 
@@ -157,8 +152,6 @@ class GestorDeHabitaciones {
   Future<void> cargarHoteles() async {
     final url = 'http://localhost:3000/habitaciones?tipo=Hotel';
     final response = await http.get(Uri.parse(url));
-    print('Respuesta: ${response.body}');
-    print('Código de estado: ${response.statusCode}');
     if (response.statusCode == 200) {
       List<dynamic> hotelesJson = json.decode(response.body);
 
