@@ -19,20 +19,9 @@ class HabitacionesController < ActionController::API
 
   # POST /habitaciones
   def create
-<<<<<<< Updated upstream
     @habitacion = Habitacion.new(habitacion_params)
     if @habitacion.save
       render json: @habitacion, status: :created
-=======
-    # Solo usar rollback en tests unitarios reales, no cuando se ejecuta el servidor
-    if should_use_rollback?
-      ActiveRecord::Base.transaction do
-        @habitacion = Habitacion.new(habitacion_params)
-        @habitacion.save!
-        raise ActiveRecord::Rollback
-      end
-      render json: { status: "ok", test: true }, status: :created
->>>>>>> Stashed changes
     else
       @habitacion = Habitacion.new(habitacion_params)
       if @habitacion.save
@@ -45,18 +34,8 @@ class HabitacionesController < ActionController::API
 
   # PATCH/PUT /habitaciones/:id
   def update
-<<<<<<< Updated upstream
     if @habitacion.update(habitacion_params)
       render json: @habitacion
-=======
-    if should_use_rollback?
-      ActiveRecord::Base.transaction do
-        if @habitacion.update(habitacion_params)
-          raise ActiveRecord::Rollback
-        end
-      end
-      render json: { status: "ok", test: true }
->>>>>>> Stashed changes
     else
       render json: @habitacion.errors, status: :unprocessable_entity
     end
@@ -64,15 +43,7 @@ class HabitacionesController < ActionController::API
 
   # DELETE /habitaciones/:id
   def destroy
-<<<<<<< Updated upstream
     if @habitacion.destroy
-=======
-    if should_use_rollback?
-      ActiveRecord::Base.transaction do
-        @habitacion.destroy
-        raise ActiveRecord::Rollback
-      end
->>>>>>> Stashed changes
       head :ok
     else
       render json: { error: "No se pudo eliminar" }, status: :unprocessable_entity
