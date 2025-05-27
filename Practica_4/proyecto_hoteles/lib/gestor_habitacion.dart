@@ -1,19 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:proyecto_hoteles/logica_decorador.dart';
+import 'logica_decorador.dart';
 import 'habitacion.dart';
 import 'hoteles.dart';
 
 class GestorDeHabitaciones {
   List<CadenaHotelera> mishabs = [];
-  final String apiUrl = "http://localhost:3000/habitaciones";
+  final String apiUrl;
 
-  GestorDeHabitaciones(this.mishabs);
+  GestorDeHabitaciones(this.mishabs, {this.apiUrl = 'http://localhost:3000'});
 
 
   Future<CadenaHotelera> cargarHabitacion(int id) async {
     final response = await http.get(Uri.parse('$apiUrl/$id'));
+    print('Respuesta: ${response.body}');
+    print('Código de estado: ${response.statusCode}');
     if (response.statusCode == 200) {
+
       final jsonMap = json.decode(response.body);
 
       final hab = CadenaHotelera.fromJson(jsonMap);
@@ -28,8 +31,11 @@ class GestorDeHabitaciones {
 
   Future<List<CadenaHotelera>> cargarHabitaciones(int? idPadre) async {
     String url = '$apiUrl?idPadre=$idPadre';
+    print('Cargando habitaciones con URL: $url');
 
     final response = await http.get(Uri.parse(url));
+    print('Respuesta: ${response.body}');
+    print('Código de estado: ${response.statusCode}');
     if (response.statusCode == 200) {
       List<dynamic> habsJson = json.decode(response.body);
 
@@ -85,6 +91,18 @@ class GestorDeHabitaciones {
       throw Exception('Failed to delete task');
     }
   }
+  Future<bool> borrarHotel(int idHotel) async {
+    final url = '$apiUrl/$idHotel';  // Asegúrate que esta es la URL correcta para borrar
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      print('Hotel ${idHotel} borrado correctamente');
+      return true;
+    } else {
+      print('Error al borrar hotel: ${response.statusCode}');
+      return false;
+    }
+  }
 
   Future<void> ocupada(int id) async {
     await cargarHabitacion(id);
@@ -127,12 +145,34 @@ class GestorDeHabitaciones {
   Future<void> actualizar(HabitacionGeneral habitacion) async {
     final url = Uri.parse('http://localhost:3000/habitaciones/${habitacion.id}');
     final response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'habitacion': habitacion.toJson()})
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'habitacion': habitacion.toJson()})
     );
     if (response.statusCode != 200) {
       throw Exception('Error al actualizar habitación ${habitacion.id}');
+    }
+  }
+
+  Future<void> cargarHoteles() async {
+    final url = 'http://localhost:3000/habitaciones?tipo=Hotel';
+    final response = await http.get(Uri.parse(url));
+    print('Respuesta: ${response.body}');
+    print('Código de estado: ${response.statusCode}');
+    if (response.statusCode == 200) {
+      List<dynamic> hotelesJson = json.decode(response.body);
+
+      // Elimina los hoteles antiguos para no duplicar
+      mishabs.removeWhere((h) => h is Hotel);
+
+      // Añade solo los hoteles (filtrando por tipo == 'Hotel')
+      for (var jsonHotel in hotelesJson) {
+        if (jsonHotel['tipo'] == 'Hotel') {
+          mishabs.add(Hotel.fromJson(jsonHotel));
+        }
+      }
+    } else {
+      throw Exception('Failed to load hoteles');
     }
   }
 }

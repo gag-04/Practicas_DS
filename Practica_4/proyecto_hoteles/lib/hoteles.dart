@@ -4,25 +4,33 @@ abstract class CadenaHotelera{
   int? id;
   bool? nodoHoja;
   int? idPadre;
+  String? tipo;
 
   Map<String,dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-        'nodo_hoja': nodoHoja,
-        'id_padre': idPadre
+      'nodo_hoja': nodoHoja,
+      'id_padre': idPadre
     };
   }
 
   static CadenaHotelera fromJson(Map<String, dynamic> json) {
     final tipo = json['tipo'] as String?;
-    if (tipo == 'Habitacion') {
+    if (tipo!.contains('Habitacion')) {
       return Habitacion.fromJson(json);
     } else if (tipo == 'Hotel') {
       return Hotel.fromJson(json);
     } else {
+      // Inferir por otras pistas (p.ej., si tiene 'nombre' es Hotel, si tiene 'capacidad' es Habitacion)
+      if (json.containsKey('nombre')) {
+        return Hotel.fromJson(json);
+      } else if (json.containsKey('capacidad')) {
+        return Habitacion.fromJson(json);
+      }
       throw Exception('No se pudo determinar el tipo de CadenaHotelera desde el JSON');
     }
   }
+
 
 
 }
@@ -37,7 +45,9 @@ class Hotel extends CadenaHotelera{
   String nombre;
 
 
-  Hotel(this.nombre, this.id, this.idPadre);
+  Hotel(this.nombre, this.id, this.idPadre){
+    nodoHoja = false;
+  }
 
 
 

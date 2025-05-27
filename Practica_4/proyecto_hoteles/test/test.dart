@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:proyecto_hoteles/habitacion.dart';
 import 'package:proyecto_hoteles/gestor_habitacion.dart';
+import 'package:proyecto_hoteles/hoteles.dart';
 
 
-/*
 void main() {
   group("Operaciones conexion",(){
     final gestor = GestorDeHabitaciones([]);
+    Hotel hotelTest = Hotel("test", null, null);
     int id=-1;
     int id_test=100;
 
@@ -19,11 +20,12 @@ void main() {
    // });
 
     test('Agregar habitacion correctamente', () async {
-      final nuevaHabitacion = Habitacion(estaOcupada: false,idPadre: id_test);
+      final nuevaHabitacion = Habitacion(estaOcupada: false,idPadre: hotelTest.id);
       id = await gestor.agregar(nuevaHabitacion);
       expect(await gestor.existe(id), isTrue);
     });
 
+    /*
     test('Eliminar una habitacion correctamente', () async {
 
       final nuevaHabitacion = Habitacion(estaOcupada: false);
@@ -69,10 +71,10 @@ void main() {
 
 
     });
+    */
+
 
   });
 }
 
 
-
- */

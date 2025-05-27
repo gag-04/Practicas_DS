@@ -13,6 +13,8 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
   bool? nodoHoja;
   @override
   int? idPadre;
+  @override
+  String? tipo;
 
   //Atributos HabitacionGeneral
   @override
@@ -24,8 +26,8 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
 
 
   Habitacion({this.id,
-    this.estaOcupada= false, this.idPadre}){
-    nodoHoja = (idPadre == null);
+    this.estaOcupada= false, this.idPadre, this.tipo = "Habitacion"}){
+    nodoHoja = true;
     precio = 50;
     capacidad = 2;
   }
@@ -58,10 +60,16 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
       idPadreValue = json['id_padre'] is String ? int.parse(json['id_padre']) : json['id_padre'] as int?;
     }
 
+    String? tipoValue;
+    if (json['tipo'] != null) {
+      tipoValue = json['tipo'];
+    }
+
     return Habitacion(
         id: idValue,
         estaOcupada: estaOcupadaValue,
-        idPadre: idPadreValue
+        idPadre: idPadreValue,
+        tipo: tipoValue
     );
   }
 
@@ -72,7 +80,7 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
     baseJson['capacidad'] = capacidad;
     baseJson['precio'] = precio;
     baseJson['esta_ocupada'] = estaOcupada;
-    baseJson['tipo'] = 'Habitacion';
+    baseJson['tipo'] = tipo;
     return baseJson;
   }
 
