@@ -91,7 +91,7 @@ class GestorDeHabitaciones {
     final response = await http.delete(Uri.parse(url));
 
     if (response.statusCode == 200 || response.statusCode == 204) {
-      print('Hotel ${idHotel} borrado correctamente');
+      print('Hotel $idHotel borrado correctamente');
       return true;
     } else {
       print('Error al borrar hotel: ${response.statusCode}');
@@ -146,6 +146,18 @@ class GestorDeHabitaciones {
     );
     if (response.statusCode != 200) {
       throw Exception('Error al actualizar habitación ${habitacion.id}');
+    }
+  }
+
+  Future<void> actualizarHotel(Hotel hotel) async {
+    final url = Uri.parse('http://localhost:3000/habitaciones/${hotel.id}');
+    final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'habitacion': hotel.toJson()})
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Error al actualizar habitación ${hotel.id}');
     }
   }
 

@@ -106,11 +106,14 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
     final nueva = Habitacion(
       estaOcupada: false,
       idPadre: currentHotel!.id,
-      tipo: "Habitacion"
+      tipo: "Habitacion",
+      numHabitacion: currentHotel!.numHabitaciones
     );
     try {
       await gestor.agregar(nueva);
       setState(() {
+        currentHotel!.numHabitaciones = (currentHotel!.numHabitaciones ?? 0) + 1;
+        gestor.actualizarHotel(currentHotel!);
         mensaje = "Habitación añadida a ${currentHotel!.nombre}";
       });
     } catch (e) {
@@ -153,12 +156,12 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
     }
   }
 
-  Future<void> marcarOcupada(int id) async {
+  Future<void> marcarOcupada(int id, int numHab) async {
     try {
       await gestor.ocupada(id);
       await gestor.cargarHabitaciones(currentHotel!.id);
       setState(() {
-        mensaje = "Habitación $id actualizada";
+        mensaje = "Habitación $numHab actualizada";
       });
     } catch (e) {
       setState(() {
@@ -175,7 +178,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
     });
   }
 
-  Future<void> decorarComoSuite(int id) async {
+  Future<void> decorarComoSuite(int id, int numHab) async {
     try {
       // Buscar la habitación por ID en la lista cargada
       final original = gestor.mishabs.firstWhere((h) => h is Habitacion && h.id == id) as Habitacion;
@@ -191,7 +194,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       await gestor.actualizar(decorada);
 
       setState(() {
-        mensaje = "Habitación $id decorada como Suite";
+        mensaje = "Habitación $numHab decorada como Suite";
       });
     } catch (e) {
       setState(() {
@@ -199,7 +202,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       });
     }
   }
-  Future<void> decorarComoFamiliar(int id) async {
+  Future<void> decorarComoFamiliar(int id, int numHabitacion) async {
     try {
       // Buscar la habitación por ID en la lista cargada
       final original = gestor.mishabs.firstWhere((h) => h is Habitacion && h.id == id) as Habitacion;
@@ -215,7 +218,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       await gestor.actualizar(decorada);
 
       setState(() {
-        mensaje = "Habitación $id decorada como Familiar";
+        mensaje = "Habitación $numHabitacion decorada como Familiar";
       });
     } catch (e) {
       setState(() {
@@ -456,7 +459,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                       ),
                       child: ListTile(
                         title: Text(
-                          '🛏️ Habitación Nº${h.id}',
+                          '🛏️ Habitación Nº${h.numHabitacion}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
@@ -467,7 +470,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                           children: [
                             ElevatedButton(
                               onPressed: currentHotel != null && h.id != null
-                                  ? () => decorarComoFamiliar(h.id!)
+                                  ? () => decorarComoFamiliar(h.id!, h.numHabitacion!)
                                   : null,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.amber, // Fondo distinto para el botón 2
@@ -477,7 +480,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                             ),
                             ElevatedButton(
                               onPressed: currentHotel != null && h.id != null
-                                  ? () => decorarComoSuite(h.id!)
+                                  ? () => decorarComoSuite(h.id!, h.numHabitacion!)
                                   : null,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.amber, // Fondo distinto para el botón 2
@@ -491,7 +494,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                                 h.estaOcupada ? Icons.check_circle : Icons.radio_button_unchecked,
                                 color: h.estaOcupada ? Colors.green : Colors.grey,
                               ),
-                              onPressed: h.id != null ? () => marcarOcupada(h.id!) : null,
+                              onPressed: h.id != null ? () => marcarOcupada(h.id!, h.numHabitacion!) : null,
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
@@ -500,7 +503,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     title: const Text('Confirmar borrado'),
-                                    content: Text('¿Seguro que quieres borrar la habitación Nº${h.id}?'),
+                                    content: Text('¿Seguro que quieres borrar la habitación Nº${h.numHabitacion}?'),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.of(context).pop(false),
@@ -518,7 +521,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                                   try {
                                     await eliminar(h.id!);
                                     setState(() {
-                                      mensaje = 'Habitación Nº${h.id} eliminada';
+                                      mensaje = 'Habitación Nº${h.numHabitacion} eliminada';
                                       // Opcionalmente quita la habitación de la lista local para actualizar UI
                                       gestor.mishabs.removeWhere((habitacion) => habitacion.id == h.id);
                                     });

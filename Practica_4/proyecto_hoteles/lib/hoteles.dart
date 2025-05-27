@@ -43,9 +43,10 @@ class Hotel extends CadenaHotelera{
   @override
   int? idPadre;
   String nombre;
+  int? numHabitaciones;
 
 
-  Hotel(this.nombre, this.id, this.idPadre){
+  Hotel(this.nombre, this.id, this.idPadre, {this.numHabitaciones = 1}){
     nodoHoja = false;
   }
 
@@ -56,8 +57,9 @@ class Hotel extends CadenaHotelera{
   @override
   Map<String,dynamic> toJson() {
     final baseJson = super.toJson();
-    baseJson['nombre'] = this.nombre;
+    baseJson['nombre'] = nombre;
     baseJson['tipo'] = 'Hotel';
+    baseJson['num_Habitacion'] = numHabitaciones;
     return baseJson;
   }
 
@@ -78,9 +80,13 @@ class Hotel extends CadenaHotelera{
     if (json['nombre'] != null){
       nombreValue = json['nombre'];
     }
+    int? numHabitacionValue;
+    if (json['num_Habitacion'] != null) {
+      numHabitacionValue = json['num_Habitacion'] is String ? int.parse(json['num_Habitacion']) : json['num_Habitacion'] as int?;
+    }
 
 
-    return Hotel(nombreValue ?? '', idValue, idPadreValue);
+    return Hotel(nombreValue ?? '', idValue, idPadreValue, numHabitaciones: numHabitacionValue);
   }
 
 
