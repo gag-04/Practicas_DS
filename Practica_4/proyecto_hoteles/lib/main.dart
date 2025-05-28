@@ -69,13 +69,6 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
     }
   }
 
-  //Future<void> _agregarHoteles() async {
-  //  await gestor.agregar(hotel1);
-   // hotel1.id = 1;
-   // await gestor.agregar(hotel2);
-   // hotel2.id = 2;
-  //}
-
   bool cargando = false;
   String mensaje = "";
 
@@ -446,7 +439,8 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                           },
                         ),
                         onTap: () {
-                          cargar(h.id);
+                          seleccionarHotel(h);
+                          cargar(h.id);;
                         },
                       ),
                     );
