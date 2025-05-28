@@ -440,7 +440,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                         ),
                         onTap: () {
                           seleccionarHotel(h);
-                          cargar(h.id);;
+                          cargar(h.id);
                         },
                       ),
                     );

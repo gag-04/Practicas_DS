@@ -25,9 +25,6 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
   bool estaOcupada;
 
 
-  int? numHabitacion;
-
-
   Habitacion({this.id,
     this.estaOcupada= false, this.idPadre, this.tipo = "Habitacion", this.numHabitacion}){
     nodoHoja = true;

@@ -6,6 +6,8 @@ abstract class CadenaHotelera{
   int? idPadre;
   String? tipo;
 
+  get estaOcupada => null;
+
   Map<String,dynamic> toJson() {
     return {
       if (id != null) 'id': id,
@@ -50,7 +52,15 @@ class Hotel extends CadenaHotelera{
     nodoHoja = false;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Hotel &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
 
+  @override
+  int get hashCode => id.hashCode;
 
 
 
