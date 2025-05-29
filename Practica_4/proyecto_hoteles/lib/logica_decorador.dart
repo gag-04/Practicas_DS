@@ -40,21 +40,27 @@ abstract class Decorador implements HabitacionGeneral{
   @override
   int? get idPadre => habitacion.idPadre;
 
+  @override
+  String? get tipo => habitacion.tipo;
+
+  @override
+  set tipo(String? value) {
+    habitacion.tipo = value;
+  }
 
 }
 
 class Suite extends Decorador {
-  @override
-  String? tipo;
-
   Suite(super.habitacion);
 
   @override
   void decorar() {
+    if (!habitacion.tipo!.contains('suite')) {
     print('Decorando como Suite');
     habitacion.capacidad = (habitacion.capacidad ?? 1) + 2;
     habitacion.precio = (habitacion.precio ?? 1.0) + 100;
-    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' suite'; /*Lorena tiene un $*/
+    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' suite';
+    }
   }
 
   @override
@@ -111,8 +117,6 @@ class Suite extends Decorador {
 
 class HabFamiliar extends Decorador {
   @override
-  String? tipo;
-  @override
   int? id;
 
   HabFamiliar(super.habitacion);
@@ -120,10 +124,12 @@ class HabFamiliar extends Decorador {
 
   @override
   void decorar() {
-    print('Decorando como Familiar');
-    habitacion.capacidad = (habitacion.capacidad ?? 1) + 4;
-    habitacion.precio = (habitacion.precio ?? 1.0) + 50;
-    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' familiar';
+    if (!habitacion.tipo!.contains('familiar')) {
+      print('Decorando como Familiar');
+      habitacion.capacidad = (habitacion.capacidad ?? 1) + 4;
+      habitacion.precio = (habitacion.precio ?? 1.0) + 50;
+      habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' familiar';
+    }
   }
 
 

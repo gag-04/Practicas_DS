@@ -1,7 +1,3 @@
-// hacer un fromJson y un toJson, comn su formato correspondiente
-
-//las llamadas son : http.post, get, delete,put....
-
 import 'hoteles.dart';
 import 'logica_decorador.dart';
 

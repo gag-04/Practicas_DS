@@ -167,8 +167,45 @@ void main() {
       print (habitacionSuiteDoble.habitacion.tipo!);
       expect(habitacionSuiteDoble.habitacion.tipo!.contains("suite suite"), isFalse);
 
+    });
 
 
+    test("Decorar como familiar solo una vez", (){
+      final habitacion = Habitacion();
+
+
+      final habitacionFamiliar = HabFamiliar(habitacion);
+
+      habitacionFamiliar.decorar();
+
+      expect(habitacionFamiliar.habitacion.tipo!.contains("familiar"), isTrue);
+
+      final habitacionFamiliarDoble = HabFamiliar(habitacionFamiliar);
+
+      habitacionFamiliarDoble.decorar();
+
+      print (habitacionFamiliarDoble.habitacion.tipo!);
+      expect(habitacionFamiliarDoble.habitacion.tipo!.contains("familiar familiar"), isFalse);
+
+    });
+
+
+    test("Decorar como suite y familiar", (){
+      final habitacion = Habitacion();
+
+
+      final habitacionFamiliar = HabFamiliar(habitacion);
+
+      habitacionFamiliar.decorar();
+
+      expect(habitacionFamiliar.habitacion.tipo!.contains("familiar"), isTrue);
+
+      final habitacionFamiliarSuite = Suite(habitacionFamiliar);
+
+      habitacionFamiliarSuite.decorar();
+
+      print (habitacionFamiliarSuite.habitacion.tipo!);
+      expect(habitacionFamiliarSuite.habitacion.tipo!.contains("familiar suite"), isTrue);
 
     });
 
