@@ -199,6 +199,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       });
     }
   }
+
   Future<void> decorarComoFamiliar(int id, int numHabitacion) async {
     try {
       // Buscar la habitación por ID en la lista cargada

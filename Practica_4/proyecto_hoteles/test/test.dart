@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:proyecto_hoteles/habitacion.dart';
 import 'package:proyecto_hoteles/gestor_habitacion.dart';
 import 'package:proyecto_hoteles/hoteles.dart';
+import 'package:proyecto_hoteles/logica_decorador.dart';
 
 
 void main() {
@@ -135,20 +136,41 @@ void main() {
 
   group("Test Extras, Probando clases",(){
     //La habitación por defecto se crea sin estar ocupada.
-    test('Habitación por defecto esta libre',() async{
+    test('Habitación por defecto esta libre',(){
       final habitacion = Habitacion();
 
       expect(habitacion.estaOcupada, isFalse);
     });
 
-
-    test('Hotel por defecto tiene 0 habitaciones',() async{
+    //El hotel por defecto no tiene habitaciones creadas
+    test('Hotel por defecto tiene 0 habitaciones',(){
       final hotel = Hotel("Test");
 
       expect(hotel.numHabitaciones, 0);
-
     });
 
+    //Solo es posible decorar una habitacion como suite una vez
+    test("Decorar como suite solo una vez", (){
+      final habitacion = Habitacion();
+
+
+      final habitacionSuite = Suite(habitacion);
+
+      habitacionSuite.decorar();
+
+      expect(habitacionSuite.habitacion.tipo!.contains("suite"), isTrue);
+
+      final habitacionSuiteDoble = Suite(habitacionSuite);
+
+      habitacionSuiteDoble.decorar();
+
+      print (habitacionSuiteDoble.habitacion.tipo!);
+      expect(habitacionSuiteDoble.habitacion.tipo!.contains("suite suite"), isFalse);
+
+
+
+
+    });
 
 
   });
