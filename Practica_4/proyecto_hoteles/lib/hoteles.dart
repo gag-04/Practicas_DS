@@ -6,6 +6,8 @@ abstract class CadenaHotelera{
   int? idPadre;
   String? tipo;
 
+  get estaOcupada => null; /*Esto no lo tiene Lorena*/
+
   Map<String,dynamic> toJson() {
     return {
       if (id != null) 'id': id,
@@ -50,7 +52,15 @@ class Hotel extends CadenaHotelera{
     nodoHoja = false;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Hotel &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
 
+  @override
+  int get hashCode => id.hashCode;
 
 
 
@@ -70,7 +80,6 @@ class Hotel extends CadenaHotelera{
       idValue = json['id'] is String ? int.parse(json['id']) : json['id'] as int?;
     }
 
-
     int? idPadreValue;
     if (json['id_padre'] != null) {
       idPadreValue = json['id_padre'] is String ? int.parse(json['id_padre']) : json['id_padre'] as int?;
@@ -80,6 +89,7 @@ class Hotel extends CadenaHotelera{
     if (json['nombre'] != null){
       nombreValue = json['nombre'];
     }
+
     int? numHabitacionValue;
     if (json['num_Habitacion'] != null) {
       numHabitacionValue = json['num_Habitacion'] is String ? int.parse(json['num_Habitacion']) : json['num_Habitacion'] as int?;

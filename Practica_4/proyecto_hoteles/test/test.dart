@@ -7,72 +7,97 @@ import 'package:proyecto_hoteles/hoteles.dart';
 void main() {
   group("Operaciones conexion",(){
     final gestor = GestorDeHabitaciones([]);
-    Hotel hotelTest = Hotel("test", null, null);
-    int id=-1;
-    int id_test=100;
+    final hotelTest = Hotel("test", null, null);
 
-    //test('Agrega y elimina una habitacion correctamente', () async {
-    //  final nuevaHabitacion = Habitacion(capacidad:3, precio: 30.0,estaOcupada: false);
-      //int id = await gestor.agregar(nuevaHabitacion);
-    //  expect(await gestor.existe(id), isTrue);
-    //  await gestor.eliminar(id);
-    //  expect(await gestor.existe(id), isFalse);
-   // });
+
+    test('Agregar hotel correctamente', () async {
+      await gestor.agregar(hotelTest);
+      expect(await gestor.existe(hotelTest.id!), isTrue);
+    });
 
     test('Agregar habitacion correctamente', () async {
-      final nuevaHabitacion = Habitacion(estaOcupada: false,idPadre: hotelTest.id);
-      id = await gestor.agregar(nuevaHabitacion);
-      expect(await gestor.existe(id), isTrue);
+      final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
+      await gestor.agregar(nuevaHabitacion);
+      expect(await gestor.existe(nuevaHabitacion.id!), isTrue);
     });
 
-    /*
+
+
     test('Eliminar una habitacion correctamente', () async {
+      final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
 
-      final nuevaHabitacion = Habitacion(estaOcupada: false);
-      final id = await gestor.agregar(nuevaHabitacion);
+      await gestor.agregar(nuevaHabitacion);
 
-      expect(await gestor.existe(id), isTrue);  // Verificas que exista
+      expect(await gestor.existe(nuevaHabitacion.id!), isTrue);  // Verificas que exista
 
-      await gestor.eliminar(id);
+      await gestor.eliminar(nuevaHabitacion.id!);
 
-      expect(await gestor.existe(id), isFalse); // Verificas que se eliminó
+      expect(await gestor.existe(nuevaHabitacion.id!), isFalse); // Verificas que se eliminó
     });
+
+
+    test('Eliminar un hotel y todas sus habitaciones', () async {
+      final nuevoHotel =Hotel("test", null, hotelTest.id );
+
+      await gestor.agregar(nuevoHotel);
+
+      final habitacionHija1 = Habitacion(idPadre: nuevoHotel.id!);
+      final habitacionHija2 = Habitacion(idPadre: nuevoHotel.id!);
+      final habitacionHija3 = Habitacion(idPadre: nuevoHotel.id!);
+
+      await gestor.agregar(habitacionHija1);
+      await gestor.agregar(habitacionHija2);
+      await gestor.agregar(habitacionHija3);
+
+      expect(await gestor.existe(nuevoHotel.id!), isTrue); // Verificas que se eliminó
+
+      expect(await gestor.existe(habitacionHija1.id!), isTrue);
+      expect(await gestor.existe(habitacionHija2.id!), isTrue);
+      expect(await gestor.existe(habitacionHija3.id!), isTrue);
+
+
+      await gestor.eliminar(nuevoHotel.id!);
+
+      expect(await gestor.existe(nuevoHotel.id!), isFalse); // Verificas que se eliminó
+
+
+      expect(await gestor.existe(habitacionHija1.id!), isFalse);
+      expect(await gestor.existe(habitacionHija2.id!), isFalse);
+      expect(await gestor.existe(habitacionHija3.id!), isFalse);
+
+    });
+
 
 
     test('Modifica una habitacion correctamente', () async {
-      final nuevaHabitacion = Habitacion(estaOcupada: false);
-      int id = await gestor.agregar(nuevaHabitacion);
-      expect(await gestor.existe(id), isTrue);
+      final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
+      await gestor.agregar(nuevaHabitacion);
+      expect(await gestor.existe(nuevaHabitacion.id!), isTrue);
 
       // Debug: verificar estado inicial
-      await gestor.cargarHabitacion(id);
-      var habitacionInicial = gestor.mishabs.firstWhere((h) => h.id == id);
-      print('Estado inicial: ${habitacionInicial.estaOcupada}');
+      await gestor.cargarHabitacion(nuevaHabitacion.id!);
 
-      await gestor.ocupada(id);
-      await gestor.cargarHabitacion(id);
+      var habitacionInicial = gestor.mishabs.firstWhere((h) => h.id == nuevaHabitacion.id);
+      expect(habitacionInicial.estaOcupada, isFalse);
 
-      final habitacionModificada = gestor.mishabs.firstWhere((h) => h.id == id);
-      print('Estado después de ocupada: ${habitacionModificada.estaOcupada}');
+      await gestor.ocupada(nuevaHabitacion.id!);
+      await gestor.cargarHabitacion(nuevaHabitacion.id!);
+
+      final habitacionModificada = gestor.mishabs.firstWhere((h) => h.id == nuevaHabitacion.id);
 
       expect(habitacionModificada.estaOcupada, isTrue);
 
       // Limpiar
-
     });
+
 
     test('Cargar habitaciones correctamente',() async{
-      final nuevaHabitacion = Habitacion(estaOcupada: false);
-      int id = await gestor.agregar(nuevaHabitacion);
-      expect(await gestor.existe(id), isTrue);
-
-      // Debug: verificar estado inicial
-      await gestor.cargarHabitacion(id);
+      final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
+      await gestor.agregar(nuevaHabitacion);
+      expect(await gestor.existe(nuevaHabitacion.id!), isTrue);
 
 
     });
-    */
-
 
   });
 }

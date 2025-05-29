@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_27_192737) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_28_175801) do
   create_table "habitacions", force: :cascade do |t|
     t.integer "capacidad"
     t.decimal "precio"
@@ -22,5 +22,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_192737) do
     t.string "nombre"
     t.string "tipo"
     t.integer "num_Habitacion"
+    t.index ["id_padre"], name: "index_habitacions_on_id_padre"
   end
+
+  add_foreign_key "habitacions", "habitacions", column: "id_padre", on_delete: :cascade
 end

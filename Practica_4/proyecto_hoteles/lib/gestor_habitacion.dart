@@ -6,7 +6,7 @@ import 'hoteles.dart';
 
 class GestorDeHabitaciones {
   List<CadenaHotelera> mishabs = [];
-  final String apiUrl = "http://localhost:3000/habitaciones";
+  final String apiUrl = "http://localhost:3000/habitaciones"  ;
 
   GestorDeHabitaciones(this.mishabs);
 
@@ -86,18 +86,7 @@ class GestorDeHabitaciones {
       throw Exception('Failed to delete task');
     }
   }
-  Future<bool> borrarHotel(int idHotel) async {
-    final url = '$apiUrl/$idHotel';  // Asegúrate que esta es la URL correcta para borrar
-    final response = await http.delete(Uri.parse(url));
 
-    if (response.statusCode == 200 || response.statusCode == 204) {
-      print('Hotel $idHotel borrado correctamente');
-      return true;
-    } else {
-      print('Error al borrar hotel: ${response.statusCode}');
-      return false;
-    }
-  }
 
   Future<void> ocupada(int id) async {
     await cargarHabitacion(id);
@@ -133,8 +122,6 @@ class GestorDeHabitaciones {
       }
     }
   }
-
-
 
 
   Future<void> actualizar(HabitacionGeneral habitacion) async {

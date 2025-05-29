@@ -96,12 +96,15 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
 
   Future<void> agregarHabitacion() async {
     if (currentHotel == null) return;
+    print(currentHotel!.numHabitaciones?.toString());
     final nueva = Habitacion(
       estaOcupada: false,
       idPadre: currentHotel!.id,
       tipo: "Habitacion",
       numHabitacion: currentHotel!.numHabitaciones
     );
+
+    print(nueva.numHabitacion.toString());
     try {
       await gestor.agregar(nueva);
       setState(() {
@@ -440,7 +443,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
                         ),
                         onTap: () {
                           seleccionarHotel(h);
-                          cargar(h.id);;
+                          cargar(h.id);
                         },
                       ),
                     );
