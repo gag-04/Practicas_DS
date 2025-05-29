@@ -7,8 +7,7 @@ import 'package:proyecto_hoteles/hoteles.dart';
 void main() {
   group("Operaciones conexion",(){
     final gestor = GestorDeHabitaciones([]);
-    final hotelTest = Hotel("test", null, null);
-
+    final hotelTest = Hotel("test");
 
     // La aplicación debe poder agregar correctamente nuevos hoteles
     test('Agregar hotel correctamente', () async {
@@ -22,7 +21,6 @@ void main() {
       await gestor.agregar(nuevaHabitacion);
       expect(await gestor.existe(nuevaHabitacion.id!), isTrue);
     });
-
 
     // La aplicación debe poder eliminar correctamente habitaciones de los hoteles
     test('Eliminar una habitacion correctamente', () async {
@@ -39,7 +37,7 @@ void main() {
 
     // La aplicación debe poder eliminar correctamente hoteles, eliminando con ello su contenido
     test('Eliminar un hotel y todas sus habitaciones', () async {
-      final nuevoHotel =Hotel("test", null, hotelTest.id );
+      final nuevoHotel =Hotel("test", idPadre: hotelTest.id );
 
       await gestor.agregar(nuevoHotel);
 
@@ -70,7 +68,7 @@ void main() {
     });
 
     //La aplicación debe poder modificar una habitación marcándola de no ocupada a ocupada y viceversa
-    test('Modifica una habitacion correctamente', () async {
+    test('Modifica el estado de una habitacion correctamente', () async {
       final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
       await gestor.agregar(nuevaHabitacion);
       expect(await gestor.existe(nuevaHabitacion.id!), isTrue);
@@ -99,15 +97,62 @@ void main() {
     });
 
     //La aplicación debe poder cargar las habitaciones de un hotel desde la base de datos
-    test('Cargar habitaciones correctamente',() async{
-      final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
-      await gestor.agregar(nuevaHabitacion);
-      expect(await gestor.existe(nuevaHabitacion.id!), isTrue);
+    test('Cargar habitaciones de un hotel correctamente',() async{
+      final nuevoHotel =Hotel("test", idPadre:hotelTest.id );
+
+      await gestor.agregar(nuevoHotel);
+
+      final habitacionHija1 = Habitacion(idPadre: nuevoHotel.id!);
+      final habitacionHija2 = Habitacion(idPadre: nuevoHotel.id!);
+      final habitacionHija3 = Habitacion(idPadre: nuevoHotel.id!);
+
+      await gestor.agregar(habitacionHija1);
+      await gestor.agregar(habitacionHija2);
+      await gestor.agregar(habitacionHija3);
+
+      expect(await gestor.existe(nuevoHotel.id!), isTrue); // Verificas que se eliminó
+
+      expect(await gestor.existe(habitacionHija1.id!), isTrue);
+      expect(await gestor.existe(habitacionHija2.id!), isTrue);
+      expect(await gestor.existe(habitacionHija3.id!), isTrue);
+
+
+      final habitaciones = await gestor.cargarHabitaciones(nuevoHotel.id);
+
+      expect(habitaciones.length, 3 );
+      expect(habitaciones.contains(habitacionHija1), isTrue);
+      expect(habitaciones.contains(habitacionHija2), isTrue);
+      expect(habitaciones.contains(habitacionHija3), isTrue);
+
+
 
 
     });
 
   });
+
+
+
+  group("Test Extras, Probando clases",(){
+    //La habitación por defecto se crea sin estar ocupada.
+    test('Habitación por defecto esta libre',() async{
+      final habitacion = Habitacion();
+
+      expect(habitacion.estaOcupada, isFalse);
+    });
+
+
+    test('Hotel por defecto tiene 0 habitaciones',() async{
+      final hotel = Hotel("Test");
+
+      expect(hotel.numHabitaciones, 0);
+
+    });
+
+
+
+  });
+
 }
 
 

@@ -33,8 +33,8 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   Hotel? currentHotel;
 
 
-  Hotel hotel1 = Hotel("Cadena Hotelera 1", null, null);
-  Hotel hotel2 = Hotel("Cadena Hotelera 2", null, null);
+  Hotel hotel1 = Hotel("Cadena Hotelera 1");
+  Hotel hotel2 = Hotel("Cadena Hotelera 2");
 
   late List<Hotel> hoteles=[];
 
@@ -51,8 +51,8 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
 
       if (gestor.mishabs.whereType<Hotel>().isEmpty) {
         // Si no hay hoteles, los agregamos solo UNA vez
-        final hotel1 = Hotel("Cadena Hotelera 1", null, null);
-        final hotel2 = Hotel("Cadena Hotelera 2", null, null);
+        final hotel1 = Hotel("Cadena Hotelera 1");
+        final hotel2 = Hotel("Cadena Hotelera 2");
 
         await gestor.agregar(hotel1);
         await gestor.agregar(hotel2);
@@ -96,19 +96,20 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
 
   Future<void> agregarHabitacion() async {
     if (currentHotel == null) return;
-    print(currentHotel!.numHabitaciones?.toString());
+
+    var numHabitacionSiguiente = (currentHotel!.numHabitaciones ?? 0) + 1;
+
     final nueva = Habitacion(
       estaOcupada: false,
       idPadre: currentHotel!.id,
       tipo: "Habitacion",
-      numHabitacion: currentHotel!.numHabitaciones
+      numHabitacion: numHabitacionSiguiente
     );
 
-    print(nueva.numHabitacion.toString());
     try {
       await gestor.agregar(nueva);
       setState(() {
-        currentHotel!.numHabitaciones = (currentHotel!.numHabitaciones ?? 0) + 1;
+        currentHotel!.numHabitaciones = numHabitacionSiguiente;
         gestor.actualizarHotel(currentHotel!);
         mensaje = "Habitación añadida a ${currentHotel!.nombre}";
       });
@@ -122,7 +123,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   Future<void> agregarHotel(String nombreValue) async {
     if (currentHotel == null ) return;
     final nueva = Hotel(
-        nombreValue, null, currentHotel!.id
+        nombreValue,idPadre: currentHotel!.id
     );
     try {
       await gestor.agregar(nueva);

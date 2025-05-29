@@ -31,6 +31,16 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
     capacidad = 2;
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Habitacion &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
 
   @override
   void decorar(){
