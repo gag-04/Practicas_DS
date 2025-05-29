@@ -10,11 +10,13 @@ void main() {
     final hotelTest = Hotel("test", null, null);
 
 
+    // La aplicación debe poder agregar correctamente nuevos hoteles
     test('Agregar hotel correctamente', () async {
       await gestor.agregar(hotelTest);
       expect(await gestor.existe(hotelTest.id!), isTrue);
     });
 
+    // La aplicación debe poder agregar correctamente nuevas habitaciones a los hoteles
     test('Agregar habitacion correctamente', () async {
       final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
       await gestor.agregar(nuevaHabitacion);
@@ -22,7 +24,7 @@ void main() {
     });
 
 
-
+    // La aplicación debe poder eliminar correctamente habitaciones de los hoteles
     test('Eliminar una habitacion correctamente', () async {
       final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
 
@@ -35,7 +37,7 @@ void main() {
       expect(await gestor.existe(nuevaHabitacion.id!), isFalse); // Verificas que se eliminó
     });
 
-
+    // La aplicación debe poder eliminar correctamente hoteles, eliminando con ello su contenido
     test('Eliminar un hotel y todas sus habitaciones', () async {
       final nuevoHotel =Hotel("test", null, hotelTest.id );
 
@@ -67,8 +69,7 @@ void main() {
 
     });
 
-
-
+    //La aplicación debe poder modificar una habitación marcándola de no ocupada a ocupada y viceversa
     test('Modifica una habitacion correctamente', () async {
       final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
       await gestor.agregar(nuevaHabitacion);
@@ -87,10 +88,17 @@ void main() {
 
       expect(habitacionModificada.estaOcupada, isTrue);
 
+      await gestor.ocupada(nuevaHabitacion.id!);
+      await gestor.cargarHabitacion(nuevaHabitacion.id!);
+
+      final segundaHabitacionModificada = gestor.mishabs.firstWhere((h) => h.id == nuevaHabitacion.id);
+
+      expect(segundaHabitacionModificada.estaOcupada, isFalse);
+
       // Limpiar
     });
 
-
+    //La aplicación debe poder cargar las habitaciones de un hotel desde la base de datos
     test('Cargar habitaciones correctamente',() async{
       final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
       await gestor.agregar(nuevaHabitacion);
