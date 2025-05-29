@@ -6,9 +6,9 @@ import 'hoteles.dart';
 
 class GestorDeHabitaciones {
   List<CadenaHotelera> mishabs = [];
-  final String apiUrl ;
+  final String apiUrl = "http://localhost:3000/habitaciones"  ;
 
-  GestorDeHabitaciones(this.mishabs, {this.apiUrl = "http://localhost:3000/habitaciones"});
+  GestorDeHabitaciones(this.mishabs);
 
 
   Future<CadenaHotelera> cargarHabitacion(int id) async {
@@ -133,6 +133,18 @@ class GestorDeHabitaciones {
     );
     if (response.statusCode != 200) {
       throw Exception('Error al actualizar habitación ${habitacion.id}');
+    }
+  }
+
+  Future<void> actualizarHotel(Hotel hotel) async {
+    final url = Uri.parse('http://localhost:3000/habitaciones/${hotel.id}');
+    final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'habitacion': hotel.toJson()})
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Error al actualizar habitación ${hotel.id}');
     }
   }
 

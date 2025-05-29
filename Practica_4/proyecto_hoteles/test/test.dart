@@ -7,6 +7,8 @@ import 'package:proyecto_hoteles/hoteles.dart';
 void main() {
   group("Operaciones conexion",(){
     final gestor = GestorDeHabitaciones([]);
+    final hotelTest = Hotel("test", null, null);
+
 
     test('Agregar hotel correctamente', () async {
       await gestor.agregar(hotelTest);
@@ -14,6 +16,9 @@ void main() {
     });
 
     test('Agregar habitacion correctamente', () async {
+      final nuevaHabitacion = Habitacion(idPadre: hotelTest.id!);
+      await gestor.agregar(nuevaHabitacion);
+      expect(await gestor.existe(nuevaHabitacion.id!), isTrue);
     });
 
 

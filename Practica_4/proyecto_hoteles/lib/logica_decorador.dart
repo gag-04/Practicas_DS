@@ -4,7 +4,6 @@
 import 'hoteles.dart';
 
 abstract class HabitacionGeneral implements CadenaHotelera{
-
   int? get capacidad;
   double? get precio;
   bool get estaOcupada;
@@ -55,7 +54,7 @@ class Suite extends Decorador {
     print('Decorando como Suite');
     habitacion.capacidad = (habitacion.capacidad ?? 1) + 2;
     habitacion.precio = (habitacion.precio ?? 1.0) + 100;
-    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' suite';
+    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' suite'; /*Lorena tiene un $*/
   }
 
   @override
@@ -107,7 +106,6 @@ class Suite extends Decorador {
   set precio(double? value) {
     habitacion.precio = value;
   }
-
 
 }
 

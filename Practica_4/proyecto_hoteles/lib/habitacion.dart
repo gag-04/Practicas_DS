@@ -7,14 +7,11 @@ import 'logica_decorador.dart';
 
 class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
   //Atributos CadenaHotelera
-  @override
   int? id;
-  @override
   bool? nodoHoja;
-  @override
   int? idPadre;
-  @override
   String? tipo;
+
 
   //Atributos HabitacionGeneral
   @override
@@ -24,6 +21,8 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
   @override
   bool estaOcupada;
 
+  int? numHabitacion;
+
 
   Habitacion({this.id,
     this.estaOcupada= false, this.idPadre, this.tipo = "Habitacion", this.numHabitacion}){
@@ -31,8 +30,6 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
     precio = 50;
     capacidad = 2;
   }
-
-
 
 
   @override
