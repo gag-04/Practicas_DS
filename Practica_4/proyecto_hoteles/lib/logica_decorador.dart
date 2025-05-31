@@ -40,28 +40,34 @@ abstract class Decorador implements HabitacionGeneral{
   @override
   int? get idPadre => habitacion.idPadre;
 
+  @override
+  String? get tipo => habitacion.tipo;
+
+  @override
+  set tipo(String? value) {
+    habitacion.tipo = value;
+  }
 
 }
 
 class Suite extends Decorador {
-  @override
-  String? tipo;
-
   Suite(super.habitacion);
 
   @override
   void decorar() {
+    if (!habitacion.tipo!.contains('suite')) {
     print('Decorando como Suite');
     habitacion.capacidad = (habitacion.capacidad ?? 1) + 2;
     habitacion.precio = (habitacion.precio ?? 1.0) + 100;
-    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' suite'; /*Lorena tiene un $*/
+    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' suite';
+    }
   }
 
   @override
-  int? get capacidad => 6;
+  int? get capacidad => habitacion.capacidad;
 
   @override
-  double? get precio => habitacion.precio != null ? habitacion.precio! * 1.8 : null;
+  double? get precio => habitacion.precio;
 
   @override
   bool? get nodoHoja => habitacion.nodoHoja;
@@ -73,18 +79,18 @@ class Suite extends Decorador {
   int? get id => habitacion.id;
 
   @override
-  set id(int? _id) {
-    habitacion.id = _id;
+  set id(int? id) {
+    habitacion.id = id;
   }
 
   @override
-  set idPadre(int? _idPadre) {
-    habitacion.idPadre = _idPadre;
+  set idPadre(int? idPadre) {
+    habitacion.idPadre = idPadre;
   }
 
   @override
-  set nodoHoja(bool? _nodoHoja) {
-    habitacion.nodoHoja = _nodoHoja;
+  set nodoHoja(bool? nodoHoja) {
+    habitacion.nodoHoja = nodoHoja;
   }
   @override
   Map<String,dynamic> toJson() {
@@ -111,8 +117,6 @@ class Suite extends Decorador {
 
 class HabFamiliar extends Decorador {
   @override
-  String? tipo;
-  @override
   int? id;
 
   HabFamiliar(super.habitacion);
@@ -120,10 +124,12 @@ class HabFamiliar extends Decorador {
 
   @override
   void decorar() {
-    print('Decorando como Familiar');
-    habitacion.capacidad = (habitacion.capacidad ?? 1) + 4;
-    habitacion.precio = (habitacion.precio ?? 1.0) + 50;
-    habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' familiar';
+    if (!habitacion.tipo!.contains('familiar')) {
+      print('Decorando como Familiar');
+      habitacion.capacidad = (habitacion.capacidad ?? 1) + 4;
+      habitacion.precio = (habitacion.precio ?? 1.0) + 50;
+      habitacion.tipo = (habitacion.tipo ?? 'habitación') + ' familiar';
+    }
   }
 
 

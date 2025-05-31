@@ -33,8 +33,8 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   Hotel? currentHotel;
 
 
-  Hotel hotel1 = Hotel("Cadena Hotelera 1", null, null);
-  Hotel hotel2 = Hotel("Cadena Hotelera 2", null, null);
+  Hotel hotel1 = Hotel("Cadena Hotelera 1");
+  Hotel hotel2 = Hotel("Cadena Hotelera 2");
 
   late List<Hotel> hoteles=[];
 
@@ -45,29 +45,41 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
     _cargarHotelesDesdeApi();
   }
 
+
   Future<void> _cargarHotelesDesdeApi() async {
-    try {
-      await gestor.cargarHoteles();
+  try {
+    await gestor.cargarHoteles();
 
-      if (gestor.mishabs.whereType<Hotel>().isEmpty) {
-        // Si no hay hoteles, los agregamos solo UNA vez
-        final hotel1 = Hotel("Cadena Hotelera 1", null, null);
-        final hotel2 = Hotel("Cadena Hotelera 2", null, null);
+    // Filtramos hoteles reales
+    final hotelesActuales = gestor.mishabs.whereType<Hotel>().toList();
 
+    if (hotelesActuales.isEmpty) {
+      // Creamos hoteles por defecto
+      final hotel1 = Hotel("Cadena Hotelera 1");
+      final hotel2 = Hotel("Cadena Hotelera 2");
+
+      // Solo agregamos si no contienen 'test'
+      if (!hotel1.nombre.toLowerCase().contains('test')) {
         await gestor.agregar(hotel1);
-        await gestor.agregar(hotel2);
-
-        await gestor.cargarHoteles();  // Recarga la lista tras la inserción
       }
 
-      setState(() {
-        hoteles = gestor.mishabs.whereType<Hotel>().toList();
-        currentHotel = hoteles.isNotEmpty ? hoteles.first : null;
-      });
-    } catch (e) {
-      print('Error cargando hoteles: $e');
+      if (!hotel2.nombre.toLowerCase().contains('test')) {
+        await gestor.agregar(hotel2);
+      }
+
+      await gestor.cargarHoteles();  // Recarga la lista tras la inserción
     }
+
+    setState(() {
+      hoteles = gestor.mishabs.whereType<Hotel>()
+          .where((hotel) => !hotel.nombre.toLowerCase().contains('test')) // También filtra aquí
+          .toList();
+      currentHotel = hoteles.isNotEmpty ? hoteles.first : null;
+    });
+  } catch (e) {
+    print('Error cargando hoteles: $e');
   }
+}
 
   bool cargando = false;
   String mensaje = "";
@@ -96,19 +108,20 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
 
   Future<void> agregarHabitacion() async {
     if (currentHotel == null) return;
-    print(currentHotel!.numHabitaciones?.toString());
+
+    var numHabitacionSiguiente = (currentHotel!.numHabitaciones ?? 0) + 1;
+
     final nueva = Habitacion(
       estaOcupada: false,
       idPadre: currentHotel!.id,
       tipo: "Habitacion",
-      numHabitacion: currentHotel!.numHabitaciones
+      numHabitacion: numHabitacionSiguiente
     );
 
-    print(nueva.numHabitacion.toString());
     try {
       await gestor.agregar(nueva);
       setState(() {
-        currentHotel!.numHabitaciones = (currentHotel!.numHabitaciones ?? 0) + 1;
+        currentHotel!.numHabitaciones = numHabitacionSiguiente;
         gestor.actualizarHotel(currentHotel!);
         mensaje = "Habitación añadida a ${currentHotel!.nombre}";
       });
@@ -120,14 +133,17 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
   }
 
   Future<void> agregarHotel(String nombreValue) async {
-    if (currentHotel == null ) return;
-    final nueva = Hotel(
-        nombreValue, null, currentHotel!.id
-    );
+    if (currentHotel == null) return;
+    final nuevo = Hotel(nombreValue, idPadre: currentHotel!.id);
     try {
-      await gestor.agregar(nueva);
+      await gestor.agregar(nuevo);
+
+      // Recarga la lista de hoteles después de agregar uno nuevo
+
       setState(() {
-        mensaje = "Hotel añadido a ${currentHotel!.nombre}";
+        hoteles.add(nuevo);
+
+        mensaje = "Hotel añadido a ${currentHotel?.nombre ?? nombreValue}";
       });
     } catch (e) {
       setState(() {
@@ -198,6 +214,7 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
       });
     }
   }
+
   Future<void> decorarComoFamiliar(int id, int numHabitacion) async {
     try {
       // Buscar la habitación por ID en la lista cargada
@@ -391,7 +408,10 @@ class _HabitacionesHttpDemoState extends State<HabitacionesHttpDemo> {
             ),
             if (cargando) const CircularProgressIndicator(),
             const SizedBox(height: 10),
-            Expanded(
+            if (gestor.mishabs.isEmpty || !cargando && mensaje.isEmpty)
+              const SizedBox()
+            else
+              Expanded(
               child: ListView.builder(
                 itemCount: gestor.mishabs.length,
                 itemBuilder: (context, index) {

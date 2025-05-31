@@ -1,7 +1,3 @@
-// hacer un fromJson y un toJson, comn su formato correspondiente
-
-//las llamadas son : http.post, get, delete,put....
-
 import 'hoteles.dart';
 import 'logica_decorador.dart';
 
@@ -30,6 +26,16 @@ class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
     precio = 50;
     capacidad = 2;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Habitacion &&
+              runtimeType == other.runtimeType &&
+              id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 
 
   @override
