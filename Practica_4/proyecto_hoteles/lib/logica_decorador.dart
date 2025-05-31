@@ -14,7 +14,6 @@ abstract class HabitacionGeneral extends CadenaHotelera{
 
   void decorar();
 
-  Map<String,dynamic> toJson();
 }
 
 abstract class Decorador implements HabitacionGeneral{
