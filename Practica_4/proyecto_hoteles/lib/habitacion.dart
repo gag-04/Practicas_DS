@@ -1,6 +1,6 @@
 import 'logica_decorador.dart';
 
-class Habitacion extends HabitacionGeneral  {
+class Habitacion implements HabitacionGeneral  {
   //Atributos CadenaHotelera
   int? id;
   bool? nodoHoja;
@@ -83,13 +83,19 @@ class Habitacion extends HabitacionGeneral  {
 
 
   @override
-  Map<String,dynamic> toJson(){
-    final baseJson = super.toJson();
+  Map<String, dynamic> toJson() {
+    final baseJson = {
+      if (id != null) 'id': id,
+      'nodo_hoja': nodoHoja,
+      'id_padre': idPadre,
+    };
+
     baseJson['capacidad'] = capacidad;
     baseJson['precio'] = precio;
     baseJson['esta_ocupada'] = estaOcupada;
     baseJson['tipo'] = tipo;
     baseJson['num_Habitacion'] = numHabitacion;
+
     return baseJson;
   }
 
