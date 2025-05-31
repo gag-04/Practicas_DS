@@ -64,10 +64,10 @@ class Suite extends Decorador {
   }
 
   @override
-  int? get capacidad => 6;
+  int? get capacidad => habitacion.capacidad;
 
   @override
-  double? get precio => habitacion.precio != null ? habitacion.precio! * 1.8 : null;
+  double? get precio => habitacion.precio;
 
   @override
   bool? get nodoHoja => habitacion.nodoHoja;
@@ -79,18 +79,18 @@ class Suite extends Decorador {
   int? get id => habitacion.id;
 
   @override
-  set id(int? _id) {
-    habitacion.id = _id;
+  set id(int? id) {
+    habitacion.id = id;
   }
 
   @override
-  set idPadre(int? _idPadre) {
-    habitacion.idPadre = _idPadre;
+  set idPadre(int? idPadre) {
+    habitacion.idPadre = idPadre;
   }
 
   @override
-  set nodoHoja(bool? _nodoHoja) {
-    habitacion.nodoHoja = _nodoHoja;
+  set nodoHoja(bool? nodoHoja) {
+    habitacion.nodoHoja = nodoHoja;
   }
   @override
   Map<String,dynamic> toJson() {

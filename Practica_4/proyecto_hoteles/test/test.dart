@@ -164,7 +164,6 @@ void main() {
 
       habitacionSuiteDoble.decorar();
 
-      print (habitacionSuiteDoble.habitacion.tipo!);
       expect(habitacionSuiteDoble.habitacion.tipo!.contains("suite suite"), isFalse);
 
     });
@@ -184,7 +183,6 @@ void main() {
 
       habitacionFamiliarDoble.decorar();
 
-      print (habitacionFamiliarDoble.habitacion.tipo!);
       expect(habitacionFamiliarDoble.habitacion.tipo!.contains("familiar familiar"), isFalse);
 
     });
@@ -204,8 +202,28 @@ void main() {
 
       habitacionFamiliarSuite.decorar();
 
-      print (habitacionFamiliarSuite.habitacion.tipo!);
       expect(habitacionFamiliarSuite.habitacion.tipo!.contains("familiar suite"), isTrue);
+
+    });
+
+    //La habitación se crea correctamnete con precio inicial a 50 y capacidad a 2 personas
+    test("Habitacion por defecto se crea con precio 50 y 2 de capacidad",(){
+      final habitacion = Habitacion();
+
+      expect(habitacion.precio,50);
+      expect(habitacion.capacidad,2);
+
+      final habitacionDecorada = Suite(habitacion);
+      habitacionDecorada.decorar();
+
+      expect(habitacionDecorada.precio,150);
+      expect(habitacionDecorada.capacidad,4);
+
+      final otraHabitacionDecorada = HabFamiliar(habitacionDecorada);
+      otraHabitacionDecorada.decorar();
+
+      expect(otraHabitacionDecorada.precio,200);
+      expect(otraHabitacionDecorada.capacidad,8);
 
     });
 

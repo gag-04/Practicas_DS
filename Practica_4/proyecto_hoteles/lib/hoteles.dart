@@ -48,7 +48,7 @@ class Hotel extends CadenaHotelera{
   int? numHabitaciones;
 
 
-  Hotel(this.nombre, {this.id=null, this.idPadre=null, this.numHabitaciones = 0}){
+  Hotel(this.nombre, {this.id, this.idPadre, this.numHabitaciones = 0}){
     nodoHoja = false;
   }
 
