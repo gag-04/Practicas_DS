@@ -1,7 +1,6 @@
-import 'hoteles.dart';
 import 'logica_decorador.dart';
 
-class Habitacion extends CadenaHotelera implements HabitacionGeneral  {
+class Habitacion extends HabitacionGeneral  {
   //Atributos CadenaHotelera
   int? id;
   bool? nodoHoja;

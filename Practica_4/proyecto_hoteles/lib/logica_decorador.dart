@@ -3,7 +3,7 @@
 //las llamadas son : http.post, get, delete,put....
 import 'hoteles.dart';
 
-abstract class HabitacionGeneral implements CadenaHotelera{
+abstract class HabitacionGeneral extends CadenaHotelera{
   int? get capacidad;
   double? get precio;
   bool get estaOcupada;
